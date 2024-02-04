@@ -1,7 +1,7 @@
 {
   "resourceType": "GMShader",
   "resourceVersion": "1.0",
-  "name": "shdTiteGpuMatrix_dot",
+  "name": "shdTiteGpuMatrix_transpose",
   "parent": {
     "name": "Shaders",
     "path": "folders/GpuMatrix/Shaders.yy",
