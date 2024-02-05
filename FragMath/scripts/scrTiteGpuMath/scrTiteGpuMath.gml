@@ -218,7 +218,8 @@ function tite_gpu_math_offset(_out, _src, _offset)
 	{
 		tite_gpu_floatN("uniOffset", _offset);
 	} else {
-		tite_gpu_float1("uniOffset", _offset ?? 0.0);
+		_offset ??= 1.0;
+		tite_gpu_float4("uniOffset", _offset, _offset, _offset, _offset);
 	}
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
@@ -251,12 +252,13 @@ function tite_gpu_math_scale(_out, _src, _scale)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_scale);
-	tite_gpu_floatN("uinTexelA", _src.texel);
+	tite_gpu_floatN("uniTexelA", _src.texel);
 	if (is_array(_scale))
 	{
 		tite_gpu_floatN("uniScale", _scale);
 	} else {
-		tite_gpu_float1("uniScale", _scale ?? 1.0);
+		_scale ??= 1.0;
+		tite_gpu_float4("uniScale", _scale, _scale, _scale, _scale);
 	}
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
@@ -290,7 +292,7 @@ function tite_gpu_math_normalize(_out, _src, _min=0, _max=1)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_normalize);
-	tite_gpu_floatN("uinTexelA", _src.texel);
+	tite_gpu_floatN("uniTexelA", _src.texel);
 	tite_gpu_float2("uniFactor", _min, _max);
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
