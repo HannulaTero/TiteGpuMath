@@ -152,7 +152,9 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		if (_copyContent)
 		{
 			// feather ignore GM2023
+			tite_gpu_begin();
 			surface_copy(self.Surface(), 0, 0, _src.Surface());
+			tite_gpu_end();
 		}
 		return self;
 	};

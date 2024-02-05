@@ -311,7 +311,7 @@ function tite_gpu_math_normalize(_out, _src, _min=0, _max=1)
 /// @param	{Real} _seed
 function tite_gpu_math_randomize(_out, _min=0, _max=1, _seed=undefined)
 {
-	_seed ??= get_timer() / 1_000_000;
+	_seed ??= (current_time mod 1000) / 1000;
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_randomize);
 	tite_gpu_floatN("uniTexelA", _out.texel);

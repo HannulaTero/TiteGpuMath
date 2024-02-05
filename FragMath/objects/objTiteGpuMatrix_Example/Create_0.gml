@@ -2,9 +2,11 @@
 show_debug_overlay(true, true);
 
 // Allow resizing for more.
-dimension = 64;
+dimension = 256;
 
-// The data.
+
+// Get highest supported type for particles.
+// Though only with 32float it looks nice, and with 8unorm doesn't even work.
 var _format = (surface_format_is_supported(surface_rgba32float))
 	? surface_rgba32float
 	: (surface_format_is_supported(surface_rgba16float)
@@ -12,18 +14,14 @@ var _format = (surface_format_is_supported(surface_rgba32float))
 		: surface_rgba8unorm
 	);
 		
+		
+// The matrix data, used for simple particles.
 matPos = new TiteGpuMatrix(dimension, dimension, { 
-	name: "Current Position",
+	name: "Position",
 	format: _format
 });
 
 matSpd = new TiteGpuMatrix(dimension, dimension, { 
-	name: "Previous Position",
+	name: "Speed",
 	format: _format
 });
-
-// For visualization. 
-vertexBuffer = undefined;
-vertex_format_begin();
-vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
-vertexFormat = vertex_format_end();

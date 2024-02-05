@@ -7,9 +7,10 @@ if (keyboard_check_pressed(vk_up))
 if (keyboard_check_pressed(vk_down)) 
 	dimension /= 2;
 
-dimension = clamp(dimension, 16, 2048);
+dimension = clamp(dimension, 128, 2048);
 
-// Update size if changed.
+
+// Update matrix sizes if dimension was changed.
 if (_previous != dimension)
 {
 	matPos.Initialize(dimension, dimension);

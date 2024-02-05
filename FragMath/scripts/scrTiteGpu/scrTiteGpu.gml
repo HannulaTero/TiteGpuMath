@@ -6,7 +6,9 @@
 global.tite_gpu = {}; 
 global.tite_gpu.baseTexture = undefined; // Special case for texA (gm_BaseTexture)
 global.tite_gpu.previousShader = -1; // Stores so it can be return after calculations are done.
-
+global.tite_gpu.additive = false;
+global.tite_gpu.repetive = false;
+global.tite_gpu.interpolate = false;
 
 /// @func	tite_gpu_begin();
 /// @desc	Changes gpu states to more suitable for calculations
@@ -232,7 +234,9 @@ function tite_gpu_inplace(_func, _args)
 	_args[0] = _out.Clone();
 	script_execute_ext(_func, _args);
 	// feather ignore GM2023
+	tite_gpu_begin();
 	surface_copy(_out.Surface(), 0, 0, _args[0].Surface());
+	tite_gpu_end();
 	_args[0].Free();
 	_args[0] = _out;
 	return _out;
