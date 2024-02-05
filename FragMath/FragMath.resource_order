@@ -6,6 +6,7 @@
     {"name":"Piecewise Unary operations","order":1,"path":"folders/GpuMatrix/Shaders/Piecewise Unary operations.yy",},
   ],
   "ResourceOrderSettings": [
+    {"name":"noteTiteGpuMatrix","order":5,"path":"notes/noteTiteGpuMatrix/noteTiteGpuMatrix.yy",},
     {"name":"shdTiteGpuMatrix_atan","order":10,"path":"shaders/shdTiteGpuMatrix_atan/shdTiteGpuMatrix_atan.yy",},
     {"name":"shdTiteGpuMatrix_sqr","order":1,"path":"shaders/shdTiteGpuMatrix_sqr/shdTiteGpuMatrix_sqr.yy",},
     {"name":"shdTiteGpuMatrix_sub","order":2,"path":"shaders/shdTiteGpuMatrix_sub/shdTiteGpuMatrix_sub.yy",},
@@ -14,6 +15,7 @@
     {"name":"shdTiteGpuMatrix_div","order":4,"path":"shaders/shdTiteGpuMatrix_div/shdTiteGpuMatrix_div.yy",},
     {"name":"shdTiteGpuMatrix_pow","order":5,"path":"shaders/shdTiteGpuMatrix_pow/shdTiteGpuMatrix_pow.yy",},
     {"name":"shdTiteGpuMatrix_exp","order":3,"path":"shaders/shdTiteGpuMatrix_exp/shdTiteGpuMatrix_exp.yy",},
+    {"name":"sprTiteGpuMatrixBackground","order":2,"path":"sprites/sprTiteGpuMatrixBackground/sprTiteGpuMatrixBackground.yy",},
     {"name":"shdTiteGpuMatrix_dot","order":3,"path":"shaders/shdTiteGpuMatrix_dot/shdTiteGpuMatrix_dot.yy",},
     {"name":"objTiteGpuMatrix_Example","order":1,"path":"objects/objTiteGpuMatrix_Example/objTiteGpuMatrix_Example.yy",},
     {"name":"shdTiteGpuMatrix_mul","order":3,"path":"shaders/shdTiteGpuMatrix_mul/shdTiteGpuMatrix_mul.yy",},
@@ -31,6 +33,7 @@
     {"name":"shdTiteGpuMatrix_tan","order":6,"path":"shaders/shdTiteGpuMatrix_tan/shdTiteGpuMatrix_tan.yy",},
     {"name":"shdTiteGpuMatrix_max","order":6,"path":"shaders/shdTiteGpuMatrix_max/shdTiteGpuMatrix_max.yy",},
     {"name":"shdTiteGpuMatrix_sqrt","order":2,"path":"shaders/shdTiteGpuMatrix_sqrt/shdTiteGpuMatrix_sqrt.yy",},
+    {"name":"shdTiteGpuMatrix_Example","order":3,"path":"shaders/shdTiteGpuMatrix_Example/shdTiteGpuMatrix_Example.yy",},
     {"name":"shdTiteGpuMatrix_normalize","order":8,"path":"shaders/shdTiteGpuMatrix_normalize/shdTiteGpuMatrix_normalize.yy",},
     {"name":"shdTiteGpuMatrix_transpose","order":4,"path":"shaders/shdTiteGpuMatrix_transpose/shdTiteGpuMatrix_transpose.yy",},
     {"name":"shdTiteGpuMatrix_distance","order":9,"path":"shaders/shdTiteGpuMatrix_distance/shdTiteGpuMatrix_distance.yy",},

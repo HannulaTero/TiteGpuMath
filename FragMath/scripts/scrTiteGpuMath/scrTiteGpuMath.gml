@@ -314,8 +314,14 @@ function tite_gpu_math_randomize(_out, _min=0, _max=1, _seed=undefined)
 	_seed ??= get_timer() / 1_000_000;
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_randomize);
+	tite_gpu_floatN("uniTexelA", _out.texel);
+	tite_gpu_floatN("uniSeed", [ 
+		_seed+1.1, _seed+1.2,
+		_seed+1.3, _seed+1.4,
+		_seed+1.5, _seed+1.6,
+		_seed+1.7, _seed+1.8
+	]);
 	tite_gpu_float2("uniRange", _min, _max);
-	tite_gpu_float4("uniSeed", _seed+1.1, _seed+2.2, _seed+3.3, _seed+4.4);
 	tite_gpu_target(_out);
 	tite_gpu_render();
 	tite_gpu_finish();

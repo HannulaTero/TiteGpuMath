@@ -32,7 +32,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 #region USER HANDLE METHODS.
 
 
-	static Initialize = function(_width, _height, _params)
+	static Initialize = function(_width, _height, _params={})
 	{
 		// Optional parameters.
 		self.name	= _params[$ "name"] ?? self.name;
@@ -123,16 +123,22 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 
 	
-	static ToBuffer = function(_buffer, _offset)
+	static ToBuffer = function(_buffer=undefined, _offset=0)
 	{
+		if (_buffer == undefined)
+		{
+			_buffer = buffer_create(self.Bytes(), buffer_fixed, 1);
+		}
 		buffer_get_surface(_buffer, self.Surface(), _offset);
-		return self;
+		buffer_seek(_buffer, buffer_seek_start, 0);
+		return _buffer;
 	};
 	
 	
-	static FromBuffer = function(_buffer, _offset)
+	static FromBuffer = function(_buffer, _offset=0)
 	{
 		buffer_set_surface(_buffer, self.Surface(), _offset);
+		buffer_seek(_buffer, buffer_seek_start, 0);
 		return self;
 	};
 	
@@ -174,6 +180,13 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 			_x -= _w * _halign;
 			_y -= _h * _valign;
 			
+		// Whether draw background.
+		if (struct_exists(_params, "background"))
+		{
+			var _c = c_black;
+			draw_rectangle_color(_x, _y, _x+_w, _y+_h, _c,_c,_c,_c, false);
+		}
+		
 		// Whether remap values into. Useful for visualizing float textures.
 		if (struct_exists(_params, "normalize"))
 		{
@@ -185,6 +198,13 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 			shader_reset();
 		} else {
 			draw_surface_stretched(self.Surface(), _x, _y, _w, _h);
+		}
+		
+		// Whether draw outline.
+		if (struct_exists(_params, "outline"))
+		{
+			var _c = c_white;
+			draw_rectangle_color(_x, _y, _x+_w, _y+_h, _c,_c,_c,_c, true);
 		}
 		return self;
 	};

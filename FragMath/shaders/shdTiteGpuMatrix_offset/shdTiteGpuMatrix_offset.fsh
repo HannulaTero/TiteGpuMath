@@ -1,6 +1,7 @@
+precision highp float;
 #define texA gm_BaseTexture
 uniform vec2 uniTexelA;
-uniform float uniOffset;
+uniform vec4 uniOffset;
 
 void main()
 {

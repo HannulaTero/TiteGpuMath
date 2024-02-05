@@ -25,6 +25,7 @@
     "IDEVersion": "2023.11.1.129",
   },
   "resources": [
+    {"id":{"name":"noteTiteGpuMatrix","path":"notes/noteTiteGpuMatrix/noteTiteGpuMatrix.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_neg","path":"shaders/shdTiteGpuMatrix_neg/shdTiteGpuMatrix_neg.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_atan","path":"shaders/shdTiteGpuMatrix_atan/shdTiteGpuMatrix_atan.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_sqr","path":"shaders/shdTiteGpuMatrix_sqr/shdTiteGpuMatrix_sqr.yy",},},
@@ -34,6 +35,7 @@
     {"id":{"name":"shdTiteGpuMatrix_div","path":"shaders/shdTiteGpuMatrix_div/shdTiteGpuMatrix_div.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_pow","path":"shaders/shdTiteGpuMatrix_pow/shdTiteGpuMatrix_pow.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_exp","path":"shaders/shdTiteGpuMatrix_exp/shdTiteGpuMatrix_exp.yy",},},
+    {"id":{"name":"sprTiteGpuMatrixBackground","path":"sprites/sprTiteGpuMatrixBackground/sprTiteGpuMatrixBackground.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_dot","path":"shaders/shdTiteGpuMatrix_dot/shdTiteGpuMatrix_dot.yy",},},
     {"id":{"name":"objTiteGpuMatrix_Example","path":"objects/objTiteGpuMatrix_Example/objTiteGpuMatrix_Example.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_mul","path":"shaders/shdTiteGpuMatrix_mul/shdTiteGpuMatrix_mul.yy",},},
@@ -52,6 +54,7 @@
     {"id":{"name":"shdTiteGpuMatrix_tan","path":"shaders/shdTiteGpuMatrix_tan/shdTiteGpuMatrix_tan.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_max","path":"shaders/shdTiteGpuMatrix_max/shdTiteGpuMatrix_max.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_sqrt","path":"shaders/shdTiteGpuMatrix_sqrt/shdTiteGpuMatrix_sqrt.yy",},},
+    {"id":{"name":"shdTiteGpuMatrix_Example","path":"shaders/shdTiteGpuMatrix_Example/shdTiteGpuMatrix_Example.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_normalize","path":"shaders/shdTiteGpuMatrix_normalize/shdTiteGpuMatrix_normalize.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_transpose","path":"shaders/shdTiteGpuMatrix_transpose/shdTiteGpuMatrix_transpose.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_distance","path":"shaders/shdTiteGpuMatrix_distance/shdTiteGpuMatrix_distance.yy",},},
