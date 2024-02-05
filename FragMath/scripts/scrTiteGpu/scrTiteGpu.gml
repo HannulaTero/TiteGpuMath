@@ -1,7 +1,6 @@
 
 #macro tite_gpu_forceinline gml_pragma("forceinline")
 
-
 // Helper global variables.
 global.tite_gpu = {}; 
 global.tite_gpu.baseTexture = undefined;	// Special case for texA (gm_BaseTexture)
@@ -11,9 +10,9 @@ global.tite_gpu.interpolate = false;		// (for LUT) Whether inputs are should be 
 global.tite_gpu.repetive = false;			// (for LUT) Whether inputs are taken as repetive .
 
 /// @func	tite_gpu_begin();
-/// @desc	Changes gpu states to more suitable for calculations
+/// @desc	Changes gpu states to more suitable for calculations.
 function tite_gpu_begin()
-{	
+{
 	tite_gpu_forceinline;
 	gpu_push_state();
 	gpu_set_alphatestenable(false);
@@ -31,7 +30,7 @@ function tite_gpu_begin()
 
 
 /// @func	tite_gpu_finish();
-/// @desc	Computing to target is finished.
+/// @desc	Computing to target is finished. As separate if other functionality is later added.
 function tite_gpu_finish()
 {
 	tite_gpu_forceinline;
@@ -99,6 +98,25 @@ function tite_gpu_set_interpolate(_interpolate=true)
 	global.tite_gpu.interpolate = _interpolate;
 }
 
+
+/// @func	tite_gpu_float4_any(_name, _values);
+/// @desc	Forces 4 items into uniform from given value.
+/// @param	{String}		_name
+/// @param	{Any}			_values Number or Array
+function tite_gpu_float4_any(_name, _values)
+{
+	tite_gpu_forceinline;
+	if (is_array(_values)) 
+	{
+		var _array = [0, 0, 0, 0];
+		array_copy(_array, 0, _values, 0, max(4, array_length(_values)));
+		tite_gpu_floatN(_name, _array);
+		array_resize(_array, 0);
+	} else {
+		_values ??= 0;
+		tite_gpu_float4(_name, _values, _values, _values, _values);
+	}
+}
 
 /// @func	tite_gpu_floatN(_name, _array);
 /// @desc	Set shader uniforms with given name.
@@ -245,15 +263,44 @@ function tite_gpu_inplace(_func, _args)
 }
 
 
+/// @func	tite_gpu_error(_msg);
+/// @desc	Throws error message.
+/// @param	{String} _msg
+function tite_gpu_error(_msg)
+{
+	tite_gpu_forceinline;
+	throw($"[TiteGpu] {_msg}");
+}
+
+
 /// @func	tite_gpu_match_piecewise(_lhs, _rhs);
 /// @desc	Do given matrices match for piecewise math, or is either a scalar (1x1)
 /// @param	{Struct.TiteGpuMatrix} _lhs
 /// @param	{Struct.TiteGpuMatrix} _rhs
+/// @return	{Bool}
 function tite_gpu_match_piecewise(_lhs, _rhs)
 {
+	tite_gpu_forceinline;
 	return ((_lhs.size[0] == _rhs.size[0]) && ((_lhs.size[1] == _rhs.size[1])))
 		|| ((_lhs.size[0] == 1) && (_lhs.size[1] == 1))	 // Allow scalar.
 		|| ((_rhs.size[0] == 1) && (_rhs.size[1] == 1)); // 
+}
+
+
+/// @func	tite_gpu_assert_piecewise(_lhs, _rhs);
+/// @desc	Forces piecewise math to have matching size, or scalar. Otherwise error.
+/// @param	{Struct.TiteGpuMatrix} _lhs
+/// @param	{Struct.TiteGpuMatrix} _rhs
+function tite_gpu_assert_piecewise(_lhs, _rhs)
+{
+	tite_gpu_forceinline;
+	if (!tite_gpu_match_piecewise(_lhs, _rhs))
+	{
+		tite_gpu_error(
+			+ $"Piecewise operation require matching matrix size, or scalars. \n"
+			+ $" - Got:\n - {_lhs.name} : {_lhs.size}\n - {_rhs.name} : {_rhs.size} \n"
+		);
+	}
 }
 
 
@@ -262,6 +309,7 @@ function tite_gpu_match_piecewise(_lhs, _rhs)
 /// @param	{Array<Any>}	_array	Values should be key-value pairs 
 function tite_gpu_mapping(_array)
 {
+	tite_gpu_forceinline;
 	var _map = {};
 	var _count = array_length(_array);
 	for(var i = 0; i < _count; i+=2)

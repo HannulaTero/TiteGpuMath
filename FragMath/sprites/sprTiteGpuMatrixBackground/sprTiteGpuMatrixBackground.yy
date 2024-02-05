@@ -20,14 +20,14 @@
   "height": 128,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"6ef695ea-687e-497f-b8f3-5546b8dc5941","blendMode":3,"displayName":"Layer 1","isLocked":false,"opacity":85.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"6ef695ea-687e-497f-b8f3-5546b8dc5941","blendMode":3,"displayName":"Layer 1","isLocked":false,"opacity":85.0,"visible":false,},
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"b3fa5047-136c-41ea-8774-f2991a4dd36a","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "GpuMatrix Example",
-    "path": "folders/GpuMatrix Example.yy",
+    "name": "GpuMatrix Examples",
+    "path": "folders/GpuMatrix Examples.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

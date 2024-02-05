@@ -2,7 +2,7 @@
 
 // Get size informstion
 var _text = text;
-with(objTiteGpuMatrix_Example)
+with(objTiteGpuMatrix_Example1)
 {
 	_text = $"Matrix size: [{dimension}, {dimension}]\n{_text}";
 }

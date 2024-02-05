@@ -1,7 +1,8 @@
 precision highp float;
 #define texA gm_BaseTexture
 uniform vec2 uniTexelA;
-uniform vec4 uniFactor;
+uniform vec4 uniMin;
+uniform vec4 uniMax;
 
 void main()
 {
@@ -9,7 +10,7 @@ void main()
 	vec4 _lhs = texture2D(texA, gl_FragCoord.xy * uniTexelA);
 	
 	// Do the calculation.
-	vec4 _out = (_lhs - uniFactor[0]) / (uniFactor[1] - uniFactor[2]);
+	vec4 _out = (_lhs - uniMin) / (uniMax - uniMin);
 
 	// Store the result.
 	gl_FragData[0] = _out;

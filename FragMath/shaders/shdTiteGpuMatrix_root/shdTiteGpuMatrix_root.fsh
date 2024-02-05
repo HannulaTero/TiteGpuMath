@@ -3,7 +3,6 @@ precision highp float;
 uniform sampler2D texB;
 uniform vec2 uniTexelA;
 uniform vec2 uniTexelB;
-uniform vec4 uniRate;
 
 void main()
 {
@@ -12,7 +11,7 @@ void main()
 	vec4 _rhs = texture2D(texB, gl_FragCoord.xy * uniTexelB);
 	
 	// Do the calculation.
-	vec4 _out = mix(_lhs, _rhs, uniRate);
+	vec4 _out = pow(_lhs, 1.0 / _rhs);
 
 	// Store the result.
 	gl_FragData[0] = _out;

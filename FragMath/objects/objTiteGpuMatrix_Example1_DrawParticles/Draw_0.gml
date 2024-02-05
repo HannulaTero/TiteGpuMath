@@ -5,7 +5,7 @@ if (vertexBuffer == undefined)
 	exit;
 }
 
-shader_set(shdTiteGpuMatrix_Example);
+shader_set(shdTiteGpuMatrix_Example1);
 vertex_submit(vertexBuffer, pr_pointlist, -1);
 shader_reset();
 

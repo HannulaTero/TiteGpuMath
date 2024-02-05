@@ -1,10 +1,10 @@
 /// @desc VISUALIZE PARTICLES
 
-with(objTiteGpuMatrix_Example)
+with(objTiteGpuMatrix_Example1)
 {
 	// Prepare.
 	var _vbuff = other.vertexBuffer;
-	var _shader = shdTiteGpuMatrix_Example_VTF;
+	var _shader = shdTiteGpuMatrix_Example1_VTF;
 	var _sampler = shader_get_sampler_index(_shader, "texA");
 	var _uniTexelA = shader_get_uniform(_shader, "uniTexelA");
 	var _uniOffset = shader_get_uniform(_shader, "uniOffset");

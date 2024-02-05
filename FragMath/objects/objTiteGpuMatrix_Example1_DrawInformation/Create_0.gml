@@ -6,10 +6,12 @@ text = "";
 
 // Give general lines.
 text += string_join("\n", 
-	"Press Backspace to Randomize.",
-	"Press Enter to Update continuously.",
+	"Hold R to Randomize.",
+	"Hold Enter to Update continuously.",
 	"Press Space to Update once.",
-	"Press Up/Down to resize matrices."
+	"Press Up/Down to resize matrices.",
+	"Hold Left to add randomness to position.",
+	"Hold Right to add randomness to speed."
 );
 
 

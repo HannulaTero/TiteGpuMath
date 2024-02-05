@@ -18,7 +18,7 @@ vertexFormat = vertex_format_end();
 // HTML5 supports VTF, so that's smarter choice.
 if (os_browser != browser_not_a_browser)
 {
-	instance_create_depth(0, 0, 0, objTiteGpuMatrix_Example_DrawParticles_VTF);
+	instance_create_depth(0, 0, 0, objTiteGpuMatrix_Example1_DrawParticles_VTF);
 	instance_destroy();
 	exit;
 }
