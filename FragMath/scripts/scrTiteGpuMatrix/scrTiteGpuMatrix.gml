@@ -89,6 +89,39 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		return surface_get_texture(self.Surface());
 	};
 
+
+	static Bytes = function()
+	{
+		static __map = tite_gpu_mapping([
+			surface_r8unorm,		1,
+			surface_rg8unorm,		2,
+			surface_rgba4unorm,		2,
+			surface_rgba8unorm,		4,
+			surface_r16float,		2,
+			surface_r32float,		4,
+			surface_rgba16float,	8,
+			surface_rgba32float,	16
+		]);
+		var _dsize = __map[$ self.format] ?? 1;
+		return _dsize * self.size[0] * self.size[1];
+	};
+	
+	
+	static BufferType = function()
+	{
+		static __map = tite_gpu_mapping([
+			surface_r8unorm,		buffer_u8,
+			surface_rg8unorm,		buffer_u8,
+			surface_rgba4unorm,		buffer_u8,
+			surface_rgba8unorm,		buffer_u8,
+			surface_r16float,		buffer_f16,
+			surface_r32float,		buffer_f32,
+			surface_rgba16float,	buffer_f16,
+			surface_rgba32float,	buffer_f32
+		]);
+		return __map[$ self.format] ?? buffer_u8;
+	};
+
 	
 	static ToBuffer = function(_buffer, _offset)
 	{
@@ -127,8 +160,11 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	
 	static Draw = function(_x=0, _y=0, _params={}) 
 	{
+		// Get the uniforms.
 		static __shader = shdTiteGpuMatrix_visualize;
 		static __uniFactor = shader_get_uniform(__shader, "uniFactor");
+		
+		// Get parameters for drawing.
 		var _w = _params[$ "width"] ?? self.size[0];
 		var _h = _params[$ "height"] ?? self.size[1];
 			_w *= _params[$ "xscale"] ?? 1.0;
@@ -137,6 +173,8 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		var _valign = _params[$ "valign"] ?? 0.0;
 			_x -= _w * _halign;
 			_y -= _h * _valign;
+			
+		// Whether remap values into. Useful for visualizing float textures.
 		if (struct_exists(_params, "normalize"))
 		{
 			var _min = _params[$ "rangeMin"] ?? 0;

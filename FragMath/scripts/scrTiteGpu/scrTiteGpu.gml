@@ -251,7 +251,19 @@ function tite_gpu_match_piecewise(_lhs, _rhs)
 }
 
 
-
+/// @func	tite_gpu_mapping(_array);
+/// @desc	Helper function to create mapping out of array.
+/// @param	{Array<Any>}	_array	Values should be key-value pairs 
+function tite_gpu_mapping(_array)
+{
+	var _map = {};
+	var _count = array_length(_array);
+	for(var i = 0; i < _count; i+=2)
+	{
+		_map[$ _array[i+0]] = _array[i+1];
+	}
+	return _map;
+}
 
 
 
