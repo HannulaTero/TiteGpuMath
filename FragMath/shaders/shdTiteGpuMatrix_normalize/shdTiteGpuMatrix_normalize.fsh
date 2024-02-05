@@ -1,6 +1,6 @@
 #define texA gm_BaseTexture
 uniform vec2 uniTexelA;
-uniform vec4 uniScale;
+uniform vec4 uniFactor;
 
 void main()
 {
@@ -8,7 +8,7 @@ void main()
 	vec4 _lhs = texture2D(texA, gl_FragCoord.xy * uniTexelA);
 	
 	// Do the calculation.
-	vec4 _out = _lhs * uniScale;
+	vec4 _out = (_lhs - uniFactor[0]) / (uniFactor[1] - uniFactor[2]);
 
 	// Store the result.
 	gl_FragData[0] = _out;

@@ -12,10 +12,10 @@ void main()
 {
 	// Do the calculation.
 	vec4 _out = vec4(
-		mix(uniRange[0], uniRange[1], random(vCoord + uniSeed[0])),
-		mix(uniRange[0], uniRange[1], random(vCoord + uniSeed[1])),
-		mix(uniRange[0], uniRange[1], random(vCoord + uniSeed[2])),
-		mix(uniRange[0], uniRange[1], random(vCoord + uniSeed[3]))
+		mix(uniRange[0], uniRange[1], random(vCoord * 12.34 + uniSeed[0])),
+		mix(uniRange[0], uniRange[1], random(vCoord * 34.56 + uniSeed[1])),
+		mix(uniRange[0], uniRange[1], random(vCoord * 56.78 + uniSeed[2])),
+		mix(uniRange[0], uniRange[1], random(vCoord * 78.90 + uniSeed[3]))
 	);
 
 	// Store the result.

@@ -12,7 +12,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 
 
 	static __counter = 0;
-	self.name = $"FragData_{__counter++}"
+	self.name = $"TiteGpuMatrix_{__counter++}"
 	self.size = [1, 1];
 	self.texel = [1.0, 1.0];
 	self.count = 1;
@@ -110,7 +110,6 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		self.texel = variable_clone(_src.texel);
 		self.count = _src.count;
 		self.format = _src.format;
-		self.surface = -1;
 		if (_copyContent)
 		{
 			// feather ignore GM2023
@@ -123,6 +122,33 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	static Clone = function(_copyContent=false) 
 	{
 		return new TiteGpuMatrix(1, 1).Copy(self, _copyContent);
+	};
+	
+	
+	static Draw = function(_x=0, _y=0, _params={}) 
+	{
+		static __shader = shdTiteGpuMatrix_visualize;
+		static __uniFactor = shader_get_uniform(__shader, "uniFactor");
+		var _w = _params[$ "width"] ?? self.size[0];
+		var _h = _params[$ "height"] ?? self.size[1];
+			_w *= _params[$ "xscale"] ?? 1.0;
+			_h *= _params[$ "yscale"] ?? 1.0;
+		var _halign = _params[$ "halign"] ?? 0.0;
+		var _valign = _params[$ "valign"] ?? 0.0;
+			_x -= _w * _halign;
+			_y -= _h * _valign;
+		if (struct_exists(_params, "normalize"))
+		{
+			var _min = _params[$ "rangeMin"] ?? 0;
+			var _max = _params[$ "rangeMax"] ?? 1;
+			shader_set(__shader);
+			shader_set_uniform_f(__uniFactor, _min, _max);
+			draw_surface_stretched(self.Surface(), _x, _y, _w, _h);
+			shader_reset();
+		} else {
+			draw_surface_stretched(self.Surface(), _x, _y, _w, _h);
+		}
+		return self;
 	};
 	
 	
@@ -239,18 +265,24 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 
 
-	static Offset = function(_src=undefined, _offset=0.0) 
+	static Offset = function(_src=undefined, _offset=undefined) 
 	{
 		_src ??= self;
 		return tite_gpu_math_offset(self, _src, _offset);
 	};
 
 
-	static Scale = function(_src=undefined, _factor=1.0) 
+	static Scale = function(_src=undefined, _factor=undefined) 
 	{
 		_src ??= self;
 		return tite_gpu_math_scale(self, _src, _factor);
 	};
+	
+	
+	static Normalize = function(_src=undefined, _min=0, _max=1)
+	{
+		return tite_gpu_math_normalize(self, _src, _min, _max);
+	};	
 	
 	
 	static Randomize = function(_min=0, _max=1, _seed=undefined)

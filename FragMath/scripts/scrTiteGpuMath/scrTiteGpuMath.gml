@@ -29,8 +29,8 @@ function tite_gpu_math_binary(_out, _lhs, _rhs, _op)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(_op);
-	tite_gpu_floatN("texelA", _lhs.texel);
-	tite_gpu_floatN("texelB", _rhs.texel);
+	tite_gpu_floatN("uniTexelA", _lhs.texel);
+	tite_gpu_floatN("uniTexelB", _rhs.texel);
 	tite_gpu_sample("texA", _lhs);
 	tite_gpu_sample("texB", _rhs);
 	tite_gpu_target(_out);
@@ -63,7 +63,7 @@ function tite_gpu_math_unary(_out, _src, _op)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(_op);
-	tite_gpu_floatN("texelA", _src.texel);
+	tite_gpu_floatN("uniTexelA", _src.texel);
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
 	tite_gpu_render();
@@ -143,7 +143,7 @@ function tite_gpu_math_clamp(_out, _src, _min, _max)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_clamp);
-	tite_gpu_floatN("texelA", _src.texel);
+	tite_gpu_floatN("uniTexelA", _src.texel);
 	tite_gpu_float2("uniRange", _min, _max);
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
@@ -178,8 +178,8 @@ function tite_gpu_math_mix(_out, _lhs, _rhs, _rate)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_mix);
-	tite_gpu_floatN("texelA", _lhs.texel);
-	tite_gpu_floatN("texelB", _rhs.texel);
+	tite_gpu_floatN("uniTexelA", _lhs.texel);
+	tite_gpu_floatN("uniTexelB", _rhs.texel);
 	tite_gpu_float1("uniRate", _rate);
 	tite_gpu_sample("texA", _lhs);
 	tite_gpu_sample("texB", _rhs);
@@ -195,7 +195,7 @@ function tite_gpu_math_mix(_out, _lhs, _rhs, _rate)
 /// @desc	Do operation with one inputs, store result into output.
 /// @param	{Struct.TiteGpuMatrix}	_out
 /// @param	{Struct.TiteGpuMatrix}	_src
-/// @param	{Real}					_offset
+/// @param	{Any}					_offset
 function tite_gpu_math_offset(_out, _src, _offset)
 {
 	// Trying to do in-place operation.
@@ -213,8 +213,13 @@ function tite_gpu_math_offset(_out, _src, _offset)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_offset);
-	tite_gpu_floatN("texelA", _src.texel);
-	tite_gpu_float1("uniOffset", _offset);
+	tite_gpu_floatN("uniTexelA", _src.texel);
+	if (is_array(_offset))
+	{
+		tite_gpu_floatN("uniOffset", _offset);
+	} else {
+		tite_gpu_float1("uniOffset", _offset ?? 0.0);
+	}
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
 	tite_gpu_render();
@@ -228,7 +233,7 @@ function tite_gpu_math_offset(_out, _src, _offset)
 /// @desc	Do operation with one inputs, store result into output.
 /// @param	{Struct.TiteGpuMatrix}	_out
 /// @param	{Struct.TiteGpuMatrix}	_src
-/// @param	{Real}					_scale
+/// @param	{Any}					_scale	Either single value or array of 4 values.
 function tite_gpu_math_scale(_out, _src, _scale)
 {
 	// Trying to do in-place operation.
@@ -246,8 +251,47 @@ function tite_gpu_math_scale(_out, _src, _scale)
 	// Do the computation.
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_scale);
-	tite_gpu_floatN("texelA", _src.texel);
-	tite_gpu_float1("uniScale", _scale);
+	tite_gpu_floatN("uinTexelA", _src.texel);
+	if (is_array(_scale))
+	{
+		tite_gpu_floatN("uniScale", _scale);
+	} else {
+		tite_gpu_float1("uniScale", _scale ?? 1.0);
+	}
+	tite_gpu_sample("texA", _src);
+	tite_gpu_target(_out);
+	tite_gpu_render();
+	tite_gpu_finish();
+	tite_gpu_end();
+	return _out;
+}
+
+
+/// @func	tite_gpu_math_normalize(_out, _src, _min, _max);
+/// @desc	Normalizes the values into given range. Doesn't clamp.
+/// @param	{Struct.TiteGpuMatrix}	_out
+/// @param	{Struct.TiteGpuMatrix}	_src
+/// @param	{Real}					_min
+/// @param	{Real}					_max
+function tite_gpu_math_normalize(_out, _src, _min=0, _max=1)
+{
+	// Trying to do in-place operation.
+	if (_out == _src)
+	{
+		return tite_gpu_inplace(tite_gpu_math_normalize, [_out, _src, _min, _max]);
+	}
+
+	// Check dimensionality match.
+	if (!tite_gpu_match_piecewise(_out, _src))
+	{
+		throw($"Piecewise math: Output and Input dimensions do not match.");
+	}
+		
+	// Do the computation.
+	tite_gpu_begin();
+	tite_gpu_shader(shdTiteGpuMatrix_normalize);
+	tite_gpu_floatN("uinTexelA", _src.texel);
+	tite_gpu_float2("uniFactor", _min, _max);
 	tite_gpu_sample("texA", _src);
 	tite_gpu_target(_out);
 	tite_gpu_render();
@@ -269,7 +313,7 @@ function tite_gpu_math_randomize(_out, _min=0, _max=1, _seed=undefined)
 	tite_gpu_begin();
 	tite_gpu_shader(shdTiteGpuMatrix_randomize);
 	tite_gpu_float2("uniRange", _min, _max);
-	tite_gpu_float4("uniSeed", _seed+0, _seed+1, _seed+2, _seed+3);
+	tite_gpu_float4("uniSeed", _seed+1.1, _seed+2.2, _seed+3.3, _seed+4.4);
 	tite_gpu_target(_out);
 	tite_gpu_render();
 	tite_gpu_finish();

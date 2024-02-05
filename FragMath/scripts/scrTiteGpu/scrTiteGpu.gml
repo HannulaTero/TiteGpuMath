@@ -34,7 +34,7 @@ function tite_gpu_end()
 	} else {
 		shader_reset();
 	}
-	global.tite_gpu.BaseTexture = undefined;
+	global.tite_gpu.baseTexture = undefined;
 	global.tite_gpu.previousShader = -1;
 }
 
@@ -169,7 +169,7 @@ function tite_gpu_sample(_name, _src)
 	tite_gpu_forceinline;
 	if (_name == "texA")
 	{
-		global.tite_gpu.BaseTexture = _src;
+		global.tite_gpu.baseTexture = _src;
 		return self;
 	}
 		
@@ -209,9 +209,9 @@ function tite_gpu_render()
 	var _h = surface_get_height(_target);
 		
 	// Check whether "texA" has been defined.
-	if (global.tite_gpu.BaseTexture != undefined)
+	if (global.tite_gpu.baseTexture != undefined)
 	{
-		var _texA = global.tite_gpu.BaseTexture.Surface();
+		var _texA = global.tite_gpu.baseTexture.Surface();
 		draw_surface_stretched(_texA, 0, 0, _w, _h);
 	} else {
 		// Add bit padding, as primitives might draw differently on different machines.
