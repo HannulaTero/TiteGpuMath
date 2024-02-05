@@ -234,7 +234,7 @@ function tite_gpu_math_scale(_out, _src, _scale)
 	// Trying to do in-place operation.
 	if (_out == _src)
 	{
-		return tite_gpu_inplace(tite_gpu_math_scalar, [_out, _src, _scale]);
+		return tite_gpu_inplace(tite_gpu_math_scale, [_out, _src, _scale]);
 	}
 
 	// Check dimensionality match.

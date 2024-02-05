@@ -75,7 +75,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		}
 		
 		// Make sure surface exists.
-		if (surface_exists(self.surface))
+		if (!surface_exists(self.surface))
 		{
 			self.surface = surface_create(self.size[0], self.size[1], self.format);
 		}
@@ -126,6 +126,16 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 	
 	
+	static Free = function() 
+	{
+		if (surface_exists(self.surface))
+		{
+			surface_free(self.surface);
+		}
+		return self;
+	};
+	
+	
 #endregion
 // 
 //==========================================================
@@ -143,7 +153,12 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	
 	// General binary operation.
 	static Binary = function(_lhs, _rhs, _op) 
-	{			
+	{
+		if (_rhs == undefined)
+		{
+			_rhs = _lhs;
+			_lhs = self;
+		}
 		return tite_gpu_math_binary(self, _lhs, _rhs, _op);	
 	};
 	
@@ -168,6 +183,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	// General unary operation.
 	static Unary = function(_src, _op) 
 	{
+		_src ??= self;
 		return tite_gpu_math_unary(self, _src, _op);
 	};
 	
@@ -195,31 +211,44 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 #region MATH: OTHER PIECEWISE OPERATIONS.
 
 
-	static Dot = function(_lhs, _rhs, _axis=[1, 0]) 
+	static Dot = function(_lhs, _rhs=undefined, _axis=[1, 0]) 
 	{
+		if (_rhs == undefined)
+		{
+			_rhs = _lhs;
+			_lhs = self;
+		}
 		return tite_gpu_math_dot(self, _lhs, _rhs, _axis);
 	};
 
-	static Clamp = function(_src, _min, _max) 
+	static Clamp = function(_src=undefined, _min=0, _max=1) 
 	{
+		_src ??= self;
 		return tite_gpu_math_clamp(self, _src, _min, _max);
 	};
 	
 	
-	static Mix = function(_lhs, _rhs, _rate) 
+	static Mix = function(_lhs, _rhs=undefined, _rate=0.5) 
 	{
+		if (_rhs == undefined)
+		{
+			_rhs = _lhs;
+			_lhs = self;
+		}
 		return tite_gpu_math_clamp(self, _lhs, _rhs, _rate);
 	};
 
 
-	static Offset = function(_src, _offset) 
+	static Offset = function(_src=undefined, _offset=0.0) 
 	{
+		_src ??= self;
 		return tite_gpu_math_offset(self, _src, _offset);
 	};
 
 
-	static Scale = function(_src, _factor) 
+	static Scale = function(_src=undefined, _factor=1.0) 
 	{
+		_src ??= self;
 		return tite_gpu_math_scale(self, _src, _factor);
 	};
 	

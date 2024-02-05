@@ -34,6 +34,8 @@ function tite_gpu_end()
 	} else {
 		shader_reset();
 	}
+	global.tite_gpu.BaseTexture = undefined;
+	global.tite_gpu.previousShader = -1;
 }
 
 
