@@ -1,3 +1,4 @@
+precision highp float;
 #define texA gm_BaseTexture
 uniform sampler2D texB;
 uniform vec2 uniTexelA;

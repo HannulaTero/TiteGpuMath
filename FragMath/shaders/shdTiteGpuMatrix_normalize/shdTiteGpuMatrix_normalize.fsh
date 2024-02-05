@@ -1,3 +1,4 @@
+precision highp float;
 #define texA gm_BaseTexture
 uniform vec2 uniTexelA;
 uniform vec4 uniFactor;

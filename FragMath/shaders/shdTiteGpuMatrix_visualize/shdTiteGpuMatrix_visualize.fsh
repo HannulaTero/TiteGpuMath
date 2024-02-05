@@ -1,3 +1,4 @@
+precision highp float;
 varying vec2 vCoord;
 uniform vec2 uniFactor;
 
