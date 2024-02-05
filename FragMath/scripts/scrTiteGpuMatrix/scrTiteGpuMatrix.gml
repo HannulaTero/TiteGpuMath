@@ -226,6 +226,34 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 // 
 //==========================================================
 //
+#region MATH: SETTINGS
+	
+	
+	static Cumulative = function()
+	{
+		tite_gpu_set_cumulative(true);
+		return self;
+	};
+	
+	
+	static Interpolate = function()
+	{
+		tite_gpu_set_interpolate(true);
+		return self;
+	};
+	
+	
+	static Repetive = function()
+	{
+		tite_gpu_set_repetive(true);
+		return self;
+	};
+	
+	
+#endregion
+// 
+//==========================================================
+//
 #region MATH: LOOKUP TABLE.
 
 
@@ -343,6 +371,13 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	{
 		return tite_gpu_math_normalize(self, _src, _min, _max);
 	};	
+
+
+	static Set = function(_values=0) 
+	{
+		return tite_gpu_math_set(self, _values);
+	};
+
 	
 	
 	static Randomize = function(_min=0, _max=1, _seed=undefined)

@@ -303,6 +303,31 @@ function tite_gpu_math_normalize(_out, _src, _min=0, _max=1)
 }
 
 
+/// @func	tite_gpu_math_set(_out, _values);
+/// @desc	Set whole surface to specific value.
+/// @param	{Struct.TiteGpuMatrix}	_out
+/// @param	{Any}					_values	Single value or 4 item array.
+function tite_gpu_math_set(_out, _values)
+{
+	// Do the computation.
+	tite_gpu_begin();
+	tite_gpu_shader(shdTiteGpuMatrix_set);
+	if (is_array(_values))
+	{
+		tite_gpu_floatN("uniOffset", _values);
+	} else {
+		_values ??= 0.0;
+		tite_gpu_float4("uniOffset", _values, _values, _values, _values);
+	}
+	tite_gpu_target(_out);
+	tite_gpu_render();
+	tite_gpu_finish();
+	tite_gpu_end();
+	return _out;
+}
+
+
+
 /// @func	tite_gpu_math_randomize(_out, _min, _max, _seed);
 /// @desc	Randomizes the target.
 /// @param	{Struct.TiteGpuMatrix} _out

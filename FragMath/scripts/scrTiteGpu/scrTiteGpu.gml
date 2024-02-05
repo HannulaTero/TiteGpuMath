@@ -4,11 +4,11 @@
 
 // Helper global variables.
 global.tite_gpu = {}; 
-global.tite_gpu.baseTexture = undefined; // Special case for texA (gm_BaseTexture)
-global.tite_gpu.previousShader = -1; // Stores so it can be return after calculations are done.
-global.tite_gpu.additive = false;
-global.tite_gpu.repetive = false;
-global.tite_gpu.interpolate = false;
+global.tite_gpu.baseTexture = undefined;	// Special case for texA (gm_BaseTexture)
+global.tite_gpu.previousShader = -1;		// Stores so it can be return after calculations are done.
+global.tite_gpu.cumulative = false;			// Store as cumulative result.
+global.tite_gpu.interpolate = false;		// (for LUT) Whether inputs are should be interpolated.
+global.tite_gpu.repetive = false;			// (for LUT) Whether inputs are taken as repetive .
 
 /// @func	tite_gpu_begin();
 /// @desc	Changes gpu states to more suitable for calculations
@@ -16,11 +16,26 @@ function tite_gpu_begin()
 {	
 	tite_gpu_forceinline;
 	gpu_push_state();
-	gpu_set_blendmode_ext(bm_one, bm_zero);
-	gpu_set_tex_filter(false);
-	gpu_set_tex_repeat(false);
 	gpu_set_alphatestenable(false);
-	gpu_set_blendenable(false);
+	gpu_set_tex_filter(global.tite_gpu.interpolate);
+	gpu_set_tex_repeat(global.tite_gpu.repetive);
+	if (global.tite_gpu.cumulative) 
+	{
+		gpu_set_blendenable(true);
+		gpu_set_blendmode_ext(bm_one, bm_one);
+	} else {
+		gpu_set_blendenable(false);
+		gpu_set_blendmode_ext(bm_one, bm_zero);
+	}
+}
+
+
+/// @func	tite_gpu_finish();
+/// @desc	Computing to target is finished.
+function tite_gpu_finish()
+{
+	tite_gpu_forceinline;
+	surface_reset_target();
 }
 
 
@@ -38,6 +53,9 @@ function tite_gpu_end()
 	}
 	global.tite_gpu.baseTexture = undefined;
 	global.tite_gpu.previousShader = -1;
+	global.tite_gpu.interpolate = false;
+	global.tite_gpu.cumulative = false;
+	global.tite_gpu.repetive = false;
 }
 
 
@@ -52,20 +70,13 @@ function tite_gpu_shader(_shader)
 }
 
 
-/// @func	tite_gpu_set_additive(_additive);
-/// @desc	Whether results are "set" or "add" to destination.
+/// @func	tite_gpu_set_cumulative(_bool);
+/// @desc	Whether results are "set" or "add" to destination. 
 /// @param	{Bool} _additive
-function tite_gpu_set_additive(_additive=true) 
+function tite_gpu_set_cumulative(_additive=true) 
 {
 	tite_gpu_forceinline;
-	if (_additive) 
-	{
-		gpu_set_blendenable(true);
-		gpu_set_blendmode_ext(bm_one, bm_one);
-	} else {
-		gpu_set_blendenable(false);
-		gpu_set_blendmode_ext(bm_one, bm_zero);
-	}
+	global.tite_gpu.cumulative = _additive;
 }
 
 
@@ -75,7 +86,7 @@ function tite_gpu_set_additive(_additive=true)
 function tite_gpu_set_repetive(_repetive=true)
 {
 	tite_gpu_forceinline;
-	gpu_set_tex_repeat(_repetive);
+	global.tite_gpu.cumulative = _repetive;
 }
 
 
@@ -85,7 +96,7 @@ function tite_gpu_set_repetive(_repetive=true)
 function tite_gpu_set_interpolate(_interpolate=true) 
 {
 	tite_gpu_forceinline;
-	gpu_set_tex_filter(_interpolate);
+	global.tite_gpu.interpolate = _interpolate;
 }
 
 
@@ -189,15 +200,6 @@ function tite_gpu_target(_src)
 {
 	tite_gpu_forceinline;
 	surface_set_target(_src.Surface());
-}
-
-
-/// @func	tite_gpu_finish();
-/// @desc	Rendering to current target is finished.
-function tite_gpu_finish()
-{
-	tite_gpu_forceinline;
-	surface_reset_target();
 }
 	
 	

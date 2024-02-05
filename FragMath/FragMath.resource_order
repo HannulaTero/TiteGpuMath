@@ -39,6 +39,7 @@
     {"name":"shdTiteGpuMatrix_Example","order":3,"path":"shaders/shdTiteGpuMatrix_Example/shdTiteGpuMatrix_Example.yy",},
     {"name":"shdTiteGpuMatrix_normalize","order":8,"path":"shaders/shdTiteGpuMatrix_normalize/shdTiteGpuMatrix_normalize.yy",},
     {"name":"shdTiteGpuMatrix_transpose","order":3,"path":"shaders/shdTiteGpuMatrix_transpose/shdTiteGpuMatrix_transpose.yy",},
+    {"name":"shdTiteGpuMatrix_set","order":9,"path":"shaders/shdTiteGpuMatrix_set/shdTiteGpuMatrix_set.yy",},
     {"name":"shdTiteGpuMatrix_distance","order":9,"path":"shaders/shdTiteGpuMatrix_distance/shdTiteGpuMatrix_distance.yy",},
     {"name":"shdTiteGpuMatrix_clamp","order":1,"path":"shaders/shdTiteGpuMatrix_clamp/shdTiteGpuMatrix_clamp.yy",},
     {"name":"shdTiteGpuMatrix_tanh","order":11,"path":"shaders/shdTiteGpuMatrix_tanh/shdTiteGpuMatrix_tanh.yy",},
