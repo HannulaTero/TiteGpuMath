@@ -4,26 +4,27 @@
 
 // Helper global variables.
 global.tite_gpu = {}; 
-global.tite_gpu.previousShader = -1;		// Stores so it can be return after calculations are done.
+global.tite_gpu.previousShader = [-1];		// Stores so it can be return after calculations are done.
 global.tite_gpu.cumulative = false;			// Store next calculation as cumulative result.
 global.tite_gpu.vertexFormat = undefined;
 global.tite_gpu.vertexBuffer = undefined;
 
 
 // Create vertex format and buffer to render whole render area.
+// Calculations are assumed to use simplified vertex shader, 
+// so it won't add any projections. Vbuff assumes pr_trianglestrip.
 vertex_format_begin();
 vertex_format_add_position();
 global.tite_gpu.vertexFormat = vertex_format_end();
 global.tite_gpu.vertexBuffer = vertex_create_buffer();
-vertex_begin(global.tite_gpu.vertexBuffer, global.tite_gpu.vertexFormat);
-vertex_position(global.tite_gpu.vertexBuffer, -1.0, -1.0); // First triangle
-vertex_position(global.tite_gpu.vertexBuffer, +1.0, -1.0); //
-vertex_position(global.tite_gpu.vertexBuffer, +1.0, +1.0); //
-vertex_position(global.tite_gpu.vertexBuffer, +1.0, +1.0); // Second triangle
-vertex_position(global.tite_gpu.vertexBuffer, -1.0, +1.0); //
-vertex_position(global.tite_gpu.vertexBuffer, -1.0, -1.0); //
-vertex_end(global.tite_gpu.vertexBuffer);
-vertex_freeze(global.tite_gpu.vertexBuffer);
+var _vbuff = global.tite_gpu.vertexBuffer;
+vertex_begin(_vbuff, global.tite_gpu.vertexFormat);
+vertex_position(_vbuff, -1.0, -1.0);
+vertex_position(_vbuff, +1.0, -1.0);
+vertex_position(_vbuff, -1.0, +1.0);
+vertex_position(_vbuff, +1.0, +1.0);
+vertex_end(_vbuff);
+vertex_freeze(_vbuff);
 
 
 /// @func	tite_gpu_begin();
@@ -61,13 +62,11 @@ function tite_gpu_end()
 {
 	tite_gpu_forceinline;
 	gpu_pop_state();
-	if (global.tite_gpu.previousShader != -1)
-	{
-		shader_set(global.tite_gpu.previousShader);
-	} else {
+	var _shader = array_pop(global.tite_gpu.previousShader);
+	if (_shader != -1)
+		shader_set(_shader);
+	else
 		shader_reset();
-	}
-	global.tite_gpu.previousShader = -1;
 	global.tite_gpu.cumulative = false;
 }
 
@@ -78,7 +77,7 @@ function tite_gpu_end()
 function tite_gpu_shader(_shader) 
 {
 	tite_gpu_forceinline;
-	global.tite_gpu.previousShader = shader_current();
+	array_push(global.tite_gpu.previousShader, shader_current());
 	shader_set(_shader);
 }
 
@@ -184,7 +183,7 @@ function tite_gpu_float4(_name, _x, _y, _z, _w)
 
 
 /// @func	tite_gpu_sample(_name, _src);
-/// @desc	Set matrix as texture sampler to be as input.
+/// @desc	Set matrix as texture sampler, input for operation.
 /// @param	{String}				_name
 /// @param	{Struct.TiteGpuMatrix}	_src
 function tite_gpu_sample(_name, _src)
@@ -212,10 +211,7 @@ function tite_gpu_target(_src)
 function tite_gpu_render()
 {
 	tite_gpu_forceinline;
-	var _target = surface_get_target();
-	var _w = surface_get_width(_target);
-	var _h = surface_get_height(_target);
-	
+	vertex_submit(global.tite_gpu.vertexBuffer, pr_trianglestrip, -1);
 }
 	
 /// @func	tite_gpu_inplace(_func, _args);

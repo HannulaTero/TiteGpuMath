@@ -15,6 +15,7 @@ function TiteGpuLut(_params=undefined) : TiteGpuMatrix(undefined, undefined, und
 	self.buffer = undefined;
 	self.rangeMin = 0.0;
 	self.rangeMax = 1.0;
+	self.interpolate = true;
 	self.Initialize(_params);
 
 
