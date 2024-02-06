@@ -53,6 +53,7 @@
     {"name":"shdTiteGpuMatrix_acos","order":9,"path":"shaders/shdTiteGpuMatrix_acos/shdTiteGpuMatrix_acos.yy",},
     {"name":"objTiteGpu_Example1_DrawParticles","order":2,"path":"objects/objTiteGpu_Example1_DrawParticles/objTiteGpu_Example1_DrawParticles.yy",},
     {"name":"shdTiteGpuMatrix_sigmoid","order":12,"path":"shaders/shdTiteGpuMatrix_sigmoid/shdTiteGpuMatrix_sigmoid.yy",},
+    {"name":"scrTiteGpuLut","order":6,"path":"scripts/scrTiteGpuLut/scrTiteGpuLut.yy",},
     {"name":"roomTiteGpu_Example1","order":4,"path":"rooms/roomTiteGpu_Example1/roomTiteGpu_Example1.yy",},
   ],
 }

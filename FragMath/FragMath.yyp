@@ -76,6 +76,7 @@
     {"id":{"name":"shdTiteGpuMatrix_acos","path":"shaders/shdTiteGpuMatrix_acos/shdTiteGpuMatrix_acos.yy",},},
     {"id":{"name":"objTiteGpu_Example1_DrawParticles","path":"objects/objTiteGpu_Example1_DrawParticles/objTiteGpu_Example1_DrawParticles.yy",},},
     {"id":{"name":"shdTiteGpuMatrix_sigmoid","path":"shaders/shdTiteGpuMatrix_sigmoid/shdTiteGpuMatrix_sigmoid.yy",},},
+    {"id":{"name":"scrTiteGpuLut","path":"scripts/scrTiteGpuLut/scrTiteGpuLut.yy",},},
     {"id":{"name":"roomTiteGpu_Example1","path":"rooms/roomTiteGpu_Example1/roomTiteGpu_Example1.yy",},},
   ],
   "RoomOrderNodes": [

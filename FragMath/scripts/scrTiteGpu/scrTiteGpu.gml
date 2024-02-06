@@ -4,11 +4,26 @@
 
 // Helper global variables.
 global.tite_gpu = {}; 
-global.tite_gpu.baseTexture = undefined;	// Special case for texA (gm_BaseTexture)
 global.tite_gpu.previousShader = -1;		// Stores so it can be return after calculations are done.
-global.tite_gpu.cumulative = false;			// Store as cumulative result.
-global.tite_gpu.interpolate = false;		// (for LUT) Whether inputs are should be interpolated.
-global.tite_gpu.repetive = false;			// (for LUT) Whether inputs are taken as repetive .
+global.tite_gpu.cumulative = false;			// Store next calculation as cumulative result.
+global.tite_gpu.vertexFormat = undefined;
+global.tite_gpu.vertexBuffer = undefined;
+
+
+// Create vertex format and buffer to render whole render area.
+vertex_format_begin();
+vertex_format_add_position();
+global.tite_gpu.vertexFormat = vertex_format_end();
+global.tite_gpu.vertexBuffer = vertex_create_buffer();
+vertex_begin(global.tite_gpu.vertexBuffer, global.tite_gpu.vertexFormat);
+vertex_position(global.tite_gpu.vertexBuffer, -1.0, -1.0); // First triangle
+vertex_position(global.tite_gpu.vertexBuffer, +1.0, -1.0); //
+vertex_position(global.tite_gpu.vertexBuffer, +1.0, +1.0); //
+vertex_position(global.tite_gpu.vertexBuffer, +1.0, +1.0); // Second triangle
+vertex_position(global.tite_gpu.vertexBuffer, -1.0, +1.0); //
+vertex_position(global.tite_gpu.vertexBuffer, -1.0, -1.0); //
+vertex_end(global.tite_gpu.vertexBuffer);
+vertex_freeze(global.tite_gpu.vertexBuffer);
 
 
 /// @func	tite_gpu_begin();
@@ -18,8 +33,8 @@ function tite_gpu_begin()
 	tite_gpu_forceinline;
 	gpu_push_state();
 	gpu_set_alphatestenable(false);
-	gpu_set_tex_filter(global.tite_gpu.interpolate);
-	gpu_set_tex_repeat(global.tite_gpu.repetive);
+	gpu_set_tex_filter(false);
+	gpu_set_tex_repeat(false);
 	if (global.tite_gpu.cumulative) 
 	{
 		gpu_set_blendenable(true);
@@ -52,11 +67,8 @@ function tite_gpu_end()
 	} else {
 		shader_reset();
 	}
-	global.tite_gpu.baseTexture = undefined;
 	global.tite_gpu.previousShader = -1;
-	global.tite_gpu.interpolate = false;
 	global.tite_gpu.cumulative = false;
-	global.tite_gpu.repetive = false;
 }
 
 
@@ -78,26 +90,6 @@ function tite_gpu_set_cumulative(_additive=true)
 {
 	tite_gpu_forceinline;
 	global.tite_gpu.cumulative = _additive;
-}
-
-
-/// @func	tite_gpu_set_repetive(_repetive);
-/// @desc	Whether texture repeats.
-/// @param	{Bool} _repetive
-function tite_gpu_set_repetive(_repetive=true)
-{
-	tite_gpu_forceinline;
-	global.tite_gpu.cumulative = _repetive;
-}
-
-
-/// @func	tite_gpu_set_interpolate(_interpolate);
-/// @desc	Whether texture values are interpolated.
-/// @param	{Bool} _interpolate
-function tite_gpu_set_interpolate(_interpolate=true) 
-{
-	tite_gpu_forceinline;
-	global.tite_gpu.interpolate = _interpolate;
 }
 
 
@@ -197,18 +189,10 @@ function tite_gpu_float4(_name, _x, _y, _z, _w)
 /// @param	{Struct.TiteGpuMatrix}	_src
 function tite_gpu_sample(_name, _src)
 {
-	// Note! There is special case for texA, as it is gm_BaseTexture.
-	// This way you can define this sampler like others.
-	tite_gpu_forceinline;
-	if (_name == "texA")
-	{
-		global.tite_gpu.baseTexture = _src;
-		return self;
-	}
-		
-	// Define other, like texB, as sampler.
 	var _shader = shader_current();
 	var _sampler = shader_get_sampler_index(_shader, _name);
+	gpu_set_tex_filter_ext(_sampler, _src.interpolate);
+	gpu_set_tex_repeat_ext(_sampler, _src.repetive);
 	texture_set_stage(_sampler, _src.Texture());
 }
 
@@ -231,16 +215,7 @@ function tite_gpu_render()
 	var _target = surface_get_target();
 	var _w = surface_get_width(_target);
 	var _h = surface_get_height(_target);
-		
-	// Check whether "texA" has been defined.
-	if (global.tite_gpu.baseTexture != undefined)
-	{
-		var _texA = global.tite_gpu.baseTexture.Surface();
-		draw_surface_stretched(_texA, 0, 0, _w, _h);
-	} else {
-		// Add bit padding, as primitives might draw differently on different machines.
-		draw_rectangle(-1, -1, _w+1, _h+1, false);
-	}
+	
 }
 	
 /// @func	tite_gpu_inplace(_func, _args);

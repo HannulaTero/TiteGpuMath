@@ -4,8 +4,6 @@ uniform sampler2D texB;
 uniform vec2 uniTexelA;
 uniform vec2 uniTexelLUT;
 uniform vec2 uniFactor;
-uniform vec4 uniIndex;
-
 void main()
 {
 	// Get the input value.
@@ -17,7 +15,7 @@ void main()
 	for(int i = 0; i < 4; i++)
 	{
 		_lhs[i] = (_lhs[i] - uniFactor[0]) * uniFactor[1];
-		_out[i] = texture2D(texB, vec2(_lhs[i], uniIndex[i] + 0.5) * uniTexelLUT)[0];
+		_out[i] = texture2D(texB, vec2(_lhs[i], 0.5) * uniTexelLUT)[0];
 	}
 	
 	// Store the result.

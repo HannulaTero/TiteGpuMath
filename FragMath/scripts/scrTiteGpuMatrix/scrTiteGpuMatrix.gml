@@ -4,7 +4,7 @@
 /// @param	{Real}		_width
 /// @param	{Real}		_height
 /// @param	{Struct}	_params		Parameters for creating data. Check initialization method.
-function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
+function TiteGpuMatrix(_width=undefined, _height=undefined, _params=undefined) constructor
 {
 //==========================================================
 //
@@ -16,10 +16,15 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	self.size = [1, 1];
 	self.texel = [1.0, 1.0];
 	self.count = 1;
+	self.repetive = false;
+	self.interpolate = false;
 	self.format = surface_rgba32float;
 	self.surface = -1;
 	
-	if (_params != undefined) 
+	// Initialization.
+	if (_width != undefined)
+	|| (_height != undefined)
+	|| (_params != undefined) 
 	{
 		self.Initialize(_width, _height, _params);
 	}
@@ -38,11 +43,13 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	/// @param	{Real}		_height
 	/// @param	{Struct}	_params		[Optional] format and name.
 	/// @return	{Struct.TiteGpuMatrix}
-	static Initialize = function(_width, _height, _params={})
+	static Initialize = function(_width=1, _height=1, _params={})
 	{
 		// Optional parameters.
-		self.name	= _params[$ "name"] ?? self.name;
+		self.name = _params[$ "name"] ?? self.name;
 		self.format	= _params[$ "format"] ?? self.format;
+		self.repetive = _params[$ "repetive"] ?? self.repetive;
+		self.interpolate = _params[$ "interpolate"] ?? self.interpolate;
 		self.format	= tite_gpu_find_supported_format(self.format);
 		
 		// Set up the size.
@@ -284,22 +291,24 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 	
 	
-	/// @func	Interpolate();
-	/// @desc	Set next calculation inputs interpolative (LUT).
+	/// @func	Interpolate(_interpolate);
+	/// @desc	Set next calculation inputs interpolative.
+	/// @param	{Bool}	_interpolate
 	/// @return {Struct.TiteGpuMatrix}
-	static Interpolate = function()
+	static Interpolate = function(_interpolate)
 	{
-		tite_gpu_set_interpolate(true);
+		self.interpolate = _interpolate;
 		return self;
 	};
 	
 	
-	/// @func	Repetive();
-	/// @desc	Set next calculation inputs repetive (LUT).
+	/// @func	Repetive(_repetive);
+	/// @desc	Set next calculation inputs repetive.
+	/// @param	{Bool}	_repetive
 	/// @return {Struct.TiteGpuMatrix}
-	static Repetive = function()
+	static Repetive = function(_repetive)
 	{
-		tite_gpu_set_repetive(true);
+		self.repetive = _repetive;
 		return self;
 	};
 
@@ -607,14 +616,13 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 
 
-	/// @func	Lut(_src, _lut, _index);
+	/// @func	Lut(_src, _lut);
 	/// @desc	Uses Look up table to select new value. 
 	/// @param	{Struct.TiteGpuMatrix}	_src
 	/// @param	{Struct.TiteGpuLookup}	_lut
-	/// @param	{Any}					_index
-	static Lut = function(_src, _lut, _index=0)
+	static Lut = function(_src, _lut)
 	{
-		return tite_gpu_math_lut(self, _src, _lut, _index);
+		return tite_gpu_math_lut(self, _src, _lut);
 	};
 
 

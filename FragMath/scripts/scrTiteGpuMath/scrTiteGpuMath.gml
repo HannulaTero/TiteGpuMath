@@ -124,18 +124,17 @@ function tite_gpu_math_dot(_out, _lhs, _rhs, _axis=[1, 0])
 }
 
 
-/// @func	tite_gpu_math_lut(_out, _src, _lut, _index);
+/// @func	tite_gpu_math_lut(_out, _src, _lut);
 /// @desc	Look up table opeation to select new value.
 /// @param	{Struct.TiteGpuMatrix}	_out
 /// @param	{Struct.TiteGpuMatrix}	_src
 /// @param	{Struct.TiteGpuLookup}	_lut
-/// @param	{Any}					_index
-function tite_gpu_math_lut(_out, _src, _lut, _index) 
+function tite_gpu_math_lut(_out, _src, _lut) 
 {
 	// Trying to do in-place operation.
 	if (_out == _src)
 	{
-		return tite_gpu_inplace(tite_gpu_math_lut, [_out, _src, _lut, _index]);
+		return tite_gpu_inplace(tite_gpu_math_lut, [_out, _src, _lut]);
 	}
 
 	// Check dimensionality match.
@@ -159,7 +158,6 @@ function tite_gpu_math_lut(_out, _src, _lut, _index)
 	tite_gpu_floatN("uniTexelLUT", _lut.texel);
 	tite_gpu_floatN("uniTexelLUT", _lut.texel);
 	tite_gpu_float2("uniFactor", _factorX, _factorY);
-	tite_gpu_float4_any("uniIndex", _index);
 	tite_gpu_target(_out);
 	tite_gpu_render();
 	tite_gpu_finish();
