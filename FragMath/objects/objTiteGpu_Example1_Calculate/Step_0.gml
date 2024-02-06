@@ -15,7 +15,5 @@ if (_previous != dimension)
 {
 	matPos.Initialize(dimension, dimension);
 	matSpd.Initialize(dimension, dimension);
-	matPos.Randomize(room_width/2-64, room_width/2+64);
-	matSpd.Randomize(-16.0, +16.0);
-	matSpd.Offset(,[0.0, -12.0, 0.0, 0.0]);
+	Reset();
 }

@@ -1,6 +1,7 @@
 
 #macro tite_gpu_forceinline gml_pragma("forceinline")
 
+
 // Helper global variables.
 global.tite_gpu = {}; 
 global.tite_gpu.baseTexture = undefined;	// Special case for texA (gm_BaseTexture)
@@ -8,6 +9,7 @@ global.tite_gpu.previousShader = -1;		// Stores so it can be return after calcul
 global.tite_gpu.cumulative = false;			// Store as cumulative result.
 global.tite_gpu.interpolate = false;		// (for LUT) Whether inputs are should be interpolated.
 global.tite_gpu.repetive = false;			// (for LUT) Whether inputs are taken as repetive .
+
 
 /// @func	tite_gpu_begin();
 /// @desc	Changes gpu states to more suitable for calculations.
@@ -269,7 +271,17 @@ function tite_gpu_inplace(_func, _args)
 function tite_gpu_error(_msg)
 {
 	tite_gpu_forceinline;
-	throw($"[TiteGpu] {_msg}");
+	throw($"[TiteGpu][Error] {_msg}");
+}
+
+
+/// @func	tite_gpu_warning(_msg);
+/// @desc	Prompts a warning, but doesn't throw error.
+/// @param	{String} _msg
+function tite_gpu_warning(_msg)
+{
+	tite_gpu_forceinline;
+	show_debug_message($"[TiteGpu][Warning] {_msg}");
 }
 
 
@@ -319,6 +331,64 @@ function tite_gpu_mapping(_array)
 	return _map;
 }
 
+
+/// @func	tite_gpu_find_supported_format(_format);
+/// @desc	Helper function to find closest supported surface format. 
+/// @param	{Constant.SurfaceFormatType}	_format	
+function tite_gpu_find_supported_format(_format)
+{
+	tite_gpu_forceinline;
+	// Map out replacement, if given format is not suitable.
+	// Assumes rgba8unorm is always accepted.
+	static __map = tite_gpu_mapping([
+		surface_rgba32float,	surface_rgba16float,
+		surface_rgba16float,	surface_rgba8unorm,
+		surface_r32float,		surface_r16float,
+		surface_r16float,		surface_r8unorm,
+		surface_rgba4unorm,		surface_rgba8unorm,	
+		surface_rg8unorm,		surface_rgba8unorm,	
+		surface_r8unorm,		surface_rgba8unorm,	
+		surface_rgba8unorm,		surface_rgba8unorm	// Lowest nominator.
+	]);
+	
+	// Try find best compatible format.
+	var _select = _format;
+	while(!surface_format_is_supported(_select))
+	{
+		_select = __map[$ _format] ?? surface_rgba8unorm;
+	}
+		
+	// Give warning of different selected format.
+	if (_select != _format)
+	{
+		tite_gpu_warning(
+			+ $"Format {tite_gpu_format_name(_format)} not supported. \n"
+			+ $" - Selected format {tite_gpu_format_name(_select)} instead."
+		);
+	}
+	
+	// Return the selected format
+	return _select;
+}
+
+
+/// @func	tite_gpu_format_name(_format);
+/// @desc	Helper function to get format name as string.
+function tite_gpu_format_name(_format)
+{
+	tite_gpu_forceinline;
+	static __map = tite_gpu_mapping([
+		surface_rgba32float,	"RGBA32Float",
+		surface_rgba16float,	"RGBA16Float",
+		surface_rgba8unorm,		"RGBA8Unorm",
+		surface_rgba4unorm,		"RGBA4Unorm",
+		surface_rg8unorm,		"RG8Unorm",
+		surface_r8unorm,		"R8Unorm",
+		surface_r32float,		"R32Float",
+		surface_r16float,		"R16Float"
+	]);
+	return __map[$ _format] ?? "<unknown surface format>";
+}
 
 
 

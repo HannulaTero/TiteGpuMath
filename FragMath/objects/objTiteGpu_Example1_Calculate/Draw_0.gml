@@ -10,8 +10,8 @@ var _filter = gpu_get_tex_filter();
 // Draw surfaces.
 gpu_set_tex_filter(false);
 matPos.Draw(_x, _y, {
-	width: 256,
-	height: 256,
+	width: _size,
+	height: _size,
 	normalize: true,
 	rangeMin: 0.0,
 	rangeMax: room_width,
@@ -21,8 +21,8 @@ matPos.Draw(_x, _y, {
 
 _x += _step;
 matSpd.Draw(_x, _y, {
-	width: 256,
-	height: 256,
+	width: _size,
+	height: _size,
 	normalize: true,
 	rangeMin: -8.0,
 	rangeMax: +8.0,

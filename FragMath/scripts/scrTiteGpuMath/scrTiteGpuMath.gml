@@ -124,6 +124,50 @@ function tite_gpu_math_dot(_out, _lhs, _rhs, _axis=[1, 0])
 }
 
 
+/// @func	tite_gpu_math_lut(_out, _src, _lut, _index);
+/// @desc	Look up table opeation to select new value.
+/// @param	{Struct.TiteGpuMatrix}	_out
+/// @param	{Struct.TiteGpuMatrix}	_src
+/// @param	{Struct.TiteGpuLookup}	_lut
+/// @param	{Any}					_index
+function tite_gpu_math_lut(_out, _src, _lut, _index) 
+{
+	// Trying to do in-place operation.
+	if (_out == _src)
+	{
+		return tite_gpu_inplace(tite_gpu_math_lut, [_out, _src, _lut, _index]);
+	}
+
+	// Check dimensionality match.
+	tite_gpu_assert_piecewise(_out, _src);
+	
+	// Preparations. Precompute range remapping factors.
+	var _factorX = _lut.rangeMin;
+	var _factorY = 1.0 / (_lut.rangeMax - _lut.rangeMin);
+	
+	// Whether do for each component separately.
+	var _shader = is_array(_index)
+		? shdTiteGpuMatrix_lut4
+		: shdTiteGpuMatrix_lut1;
+	
+	// Do the computation.
+	tite_gpu_begin();
+	tite_gpu_shader(_shader);
+	tite_gpu_sample("texA", _src);
+	tite_gpu_sample("texLUT", _lut);
+	tite_gpu_floatN("uniTexelA", _src.texel);
+	tite_gpu_floatN("uniTexelLUT", _lut.texel);
+	tite_gpu_floatN("uniTexelLUT", _lut.texel);
+	tite_gpu_float2("uniFactor", _factorX, _factorY);
+	tite_gpu_float4_any("uniIndex", _index);
+	tite_gpu_target(_out);
+	tite_gpu_render();
+	tite_gpu_finish();
+	tite_gpu_end();
+	return _out;
+}
+
+
 /// @func	tite_gpu_math_clamp(_out, _src, _min, _max);
 /// @desc	Clamping function. 
 /// @param	{Struct.TiteGpuMatrix}	_out
@@ -147,7 +191,7 @@ function tite_gpu_math_clamp(_out, _src, _min=undefined, _max=undefined)
 	tite_gpu_sample("texA", _src);
 	tite_gpu_floatN("uniTexelA", _src.texel);
 	tite_gpu_float4_any("uniMin", _min ?? 0);
-	tite_gpu_float4_any("uniMax", _min ?? 1);
+	tite_gpu_float4_any("uniMax", _max ?? 1);
 	tite_gpu_target(_out);
 	tite_gpu_render();
 	tite_gpu_finish();

@@ -1,0 +1,69 @@
+========================================================
+
+GPU MATRIX LIBRARY
+	Written for Cookbook jam.
+	By Tero Hannula
+	
+========================================================
+
+MIT License
+
+Copyright (c) 2024 Tero Hannula
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+========================================================
+
+HOW TO USE
+
+1)	Create matrix with given size. With struct you can give optional parameters.
+		mat = new TiteGpuMatrix(256, 256); // Creates matrix with default parameters.
+		
+2)	Do calculations in any of Draw-events, as this uses shaders and surfaces. 
+	You can use either matrix method-functions, or script functions directly.
+		mat.Randomize(-16.0, +16.0);			// Randomizes contents to be between -16 and +16.
+		tite_gpu_randomize(mat, -16.0, +16.0);	// Does same.
+
+3)	To set values into matrix, use FromBuffer-method.
+		mat.FromBuffer(buffer); // Puts contents of buffer into matrix.
+
+4)	Get results from matrix into to used in GML, use ToBuffer-method.
+		mat.ToBuffer(buffer); // Puts contents of matrix into buffer.
+
+5)	Destroy matrix when you don't use it anymore.
+		mat.Free(); // Frees the GPU data. If you still use matrix, data is recreated.
+
+
+========================================================
+
+GENERAL CONSIDERATIONS & INFO
+
+Different GPUs can have differing behaviour, and they might not support same accuracies.
+
+Calculations must happen in the GameMaker's Draw-events, 
+because calculations are just rendering, and drawing doesn't work in other events. 
+
+Operation methods will take inputs, and store results in callee.
+
+In-place operations make temporal surface, which is cleaned afterwards. 
+	- Reason for this, is that you can't use surface as both source and destination.
+
+
+
+========================================================

@@ -41,8 +41,9 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	static Initialize = function(_width, _height, _params={})
 	{
 		// Optional parameters.
-		self.format	= _params[$ "format"] ?? self.format;
 		self.name	= _params[$ "name"] ?? self.name;
+		self.format	= _params[$ "format"] ?? self.format;
+		self.format	= tite_gpu_find_supported_format(self.format);
 		
 		// Set up the size.
 		self.size[0] = clamp(ceil(_width), 1, 16384);
@@ -56,10 +57,11 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		// Give warning if size was not valid.
 		if (self.size[0] != _width) || (self.size[1] != _height)
 		{
-			var _warning = $"[TiteGpuMatrix] Warning: ";
-				_warning += $"non-valid size: [{_width}, {_height}], "
-				_warning += $"changed into: [{self.size[0]}, {self.size[1]}], "
-			show_debug_message(_warning);
+			tite_gpu_warning(
+				+ $"Matrix {self.name} Initialize: \n"
+				+ $" - Non-valid size: [{_width}, {_height}] \n"
+				+ $" - Changed into:   {self.size} "
+			);
 		}
 		
 		return self;
@@ -300,14 +302,6 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 		tite_gpu_set_repetive(true);
 		return self;
 	};
-	
-	
-#endregion
-// 
-//==========================================================
-//
-#region MATH: LOOKUP TABLE.
-
 
 	
 #endregion
@@ -341,7 +335,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	/// @return {Struct.TiteGpuMatrix}
 	static Add = function(_lhs, _rhs=undefined) 
 	{ 
-		return Binary(_lhs, _rhs, shdTiteGpuMatrix_add); 
+		return Binary(_lhs, _rhs, shdTiteGpuMatrix_add);
 	};
 	
 	
@@ -613,11 +607,22 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	};
 
 
+	/// @func	Lut(_src, _lut, _index);
+	/// @desc	Uses Look up table to select new value. 
+	/// @param	{Struct.TiteGpuMatrix}	_src
+	/// @param	{Struct.TiteGpuLookup}	_lut
+	/// @param	{Any}					_index
+	static Lut = function(_src, _lut, _index=0)
+	{
+		return tite_gpu_math_lut(self, _src, _lut, _index);
+	};
+
+
 	/// @func	Clamp(_src, _min, _max);
 	/// @desc	Clamps values to given range.
 	/// @param	{Struct.TiteGpuMatrix}	_src
-	/// @param	{Real}					_min
-	/// @param	{Real}					_max
+	/// @param	{Any}					_min
+	/// @param	{Any}					_max
 	/// @return {Struct.TiteGpuMatrix}
 	static Clamp = function(_src=undefined, _min=0, _max=1) 
 	{
@@ -630,7 +635,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	/// @desc	Lerps two matrices with given rate.
 	/// @param	{Struct.TiteGpuMatrix}	_lhs
 	/// @param	{Struct.TiteGpuMatrix}	_rhs
-	/// @param	{Real}					_rate
+	/// @param	{Any}					_rate
 	/// @return {Struct.TiteGpuMatrix}
 	static Mix = function(_lhs=undefined, _rhs=undefined, _rate=0.5) 
 	{
@@ -643,7 +648,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	/// @func	Offset(_src, _offset);
 	/// @desc	Adds offset to given matrix.
 	/// @param	{Struct.TiteGpuMatrix}	_src
-	/// @param	{Any}					_offset	Single value, or 4 item array.
+	/// @param	{Any}					_offset
 	/// @return {Struct.TiteGpuMatrix}
 	static Offset = function(_src=undefined, _offset=undefined) 
 	{
@@ -655,7 +660,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 	/// @func	Scale(_src, _factor);
 	/// @desc	Scales values of given matrix.
 	/// @param	{Struct.TiteGpuMatrix}	_src
-	/// @param	{Any}					_factor	Single value, or 4 item array.
+	/// @param	{Any}					_factor
 	/// @return {Struct.TiteGpuMatrix}
 	static Scale = function(_src=undefined, _factor=undefined) 
 	{
@@ -679,7 +684,7 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 
 	/// @func	Set(_values);
 	/// @desc	Set all matrix values to given value
-	/// @param	{Any}	_values		Single value or 4 item array.
+	/// @param	{Any}	_values	
 	/// @return {Struct.TiteGpuMatrix}
 	static Set = function(_values=undefined) 
 	{
@@ -688,10 +693,10 @@ function TiteGpuMatrix(_width=1, _height=1, _params=undefined) constructor
 
 
 	/// @func	Randomize(_min, _max, _seed);
-	/// @desc	Randomizes matrix.
-	/// @param	{Any}	_min	Single value or 4 item array.
-	/// @param	{Any}	_max	Single value or 4 item array.
-	/// @param	{Real}	_seed
+	/// @desc	Randomizes matrix content.
+	/// @param	{Any}	_min
+	/// @param	{Any}	_max
+	/// @param	{Any}	_seed
 	/// @return {Struct.TiteGpuMatrix}
 	static Randomize = function(_min=undefined, _max=undefined, _seed=undefined)
 	{
