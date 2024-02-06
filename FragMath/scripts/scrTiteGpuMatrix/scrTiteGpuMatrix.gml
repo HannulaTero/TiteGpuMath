@@ -50,6 +50,8 @@ function TiteGpuMatrix(_width=undefined, _height=undefined, _params=undefined) c
 		self.format	= _params[$ "format"] ?? self.format;
 		self.repetive = _params[$ "repetive"] ?? self.repetive;
 		self.interpolate = _params[$ "interpolate"] ?? self.interpolate;
+		
+		// Make sure format is supported.
 		self.format	= tite_gpu_find_supported_format(self.format);
 		
 		// Set up the size.
@@ -116,18 +118,7 @@ function TiteGpuMatrix(_width=undefined, _height=undefined, _params=undefined) c
 	/// @return {Real}
 	static Bytes = function()
 	{
-		static __map = tite_gpu_mapping([
-			surface_r8unorm,		1,
-			surface_rg8unorm,		2,
-			surface_rgba4unorm,		2,
-			surface_rgba8unorm,		4,
-			surface_r16float,		2,
-			surface_r32float,		4,
-			surface_rgba16float,	8,
-			surface_rgba32float,	16
-		]);
-		var _dsize = __map[$ self.format] ?? 1;
-		return _dsize * self.size[0] * self.size[1];
+		return tite_gpu_format_bytes(self.format);
 	};
 	
 	
@@ -136,17 +127,7 @@ function TiteGpuMatrix(_width=undefined, _height=undefined, _params=undefined) c
 	/// @return {Constant.BufferDataType}
 	static BufferType = function()
 	{
-		static __map = tite_gpu_mapping([
-			surface_r8unorm,		buffer_u8,
-			surface_rg8unorm,		buffer_u8,
-			surface_rgba4unorm,		buffer_u8,
-			surface_rgba8unorm,		buffer_u8,
-			surface_r16float,		buffer_f16,
-			surface_r32float,		buffer_f32,
-			surface_rgba16float,	buffer_f16,
-			surface_rgba32float,	buffer_f32
-		]);
-		return __map[$ self.format] ?? buffer_u8;
+		return tite_gpu_format_buffer_dtype(self.format);
 	};
 
 	
@@ -267,9 +248,7 @@ function TiteGpuMatrix(_width=undefined, _height=undefined, _params=undefined) c
 	static Free = function() 
 	{
 		if (surface_exists(self.surface))
-		{
 			surface_free(self.surface);
-		}
 		return self;
 	};
 	

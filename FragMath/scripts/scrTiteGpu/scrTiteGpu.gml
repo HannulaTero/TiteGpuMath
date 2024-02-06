@@ -305,7 +305,7 @@ function tite_gpu_mapping(_array)
 
 /// @func	tite_gpu_find_supported_format(_format);
 /// @desc	Helper function to find closest supported surface format. 
-/// @param	{Constant.SurfaceFormatType}	_format	
+/// @param	{Constant.SurfaceFormatType} _format	
 function tite_gpu_find_supported_format(_format)
 {
 	tite_gpu_forceinline;
@@ -345,6 +345,7 @@ function tite_gpu_find_supported_format(_format)
 
 /// @func	tite_gpu_format_name(_format);
 /// @desc	Helper function to get format name as string.
+/// @param	{Constant.SurfaceFormatType} _format	
 function tite_gpu_format_name(_format)
 {
 	tite_gpu_forceinline;
@@ -362,7 +363,59 @@ function tite_gpu_format_name(_format)
 }
 
 
+/// @func	tite_gpu_format_components(_format);
+/// @desc	Helper function to get how many components format has.
+/// @param	{Constant.SurfaceFormatType} _format	
+function tite_gpu_format_components(_format)
+{
+	tite_gpu_forceinline;
+	static __map = tite_gpu_mapping([
+		surface_rgba32float,	4,
+		surface_rgba16float,	4,
+		surface_rgba8unorm,		4,
+		surface_rgba4unorm,		4,
+		surface_rg8unorm,		2,
+		surface_r8unorm,		1,
+		surface_r32float,		1,
+		surface_r16float,		1
+	]);
+	return __map[$ _format] ?? 4;
+}
 
 
+/// @func	tite_gpu_format_bytes(_format);
+/// @desc	Helper function to get how many bytes format takes per element.
+/// @param	{Constant.SurfaceFormatType} _format	
+function tite_gpu_format_bytes(_format)
+{
+	tite_gpu_forceinline;
+	static __map = tite_gpu_mapping([
+		surface_rgba32float,	4 * 4,
+		surface_rgba16float,	4 * 2,
+		surface_rgba8unorm,		4 * 1,
+		surface_rgba4unorm,		4 * 0.5,
+		surface_rg8unorm,		2 * 1,
+		surface_r8unorm,		1 * 1,
+		surface_r32float,		1 * 4,
+		surface_r16float,		1 * 2
+	]);
+	return __map[$ _format] ?? 4;
+}
+
+
+/// @func	tite_gpu_format_buffer_dtype(_format);
+/// @desc	Helper function to get representative buffer datatype.
+/// @param	{Constant.SurfaceFormatType} _format	
+function tite_gpu_format_buffer_dtype(_format)
+{
+	tite_gpu_forceinline;
+	static __map = tite_gpu_mapping([
+		surface_rgba32float,	buffer_f32,
+		surface_rgba16float,	buffer_f16,
+		surface_r32float,		buffer_f32,
+		surface_r16float,		buffer_f16
+	]);
+	return __map[$ _format] ?? buffer_u8;
+}
 
 
