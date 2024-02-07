@@ -5,6 +5,7 @@
 function tite_format_find(_format)
 {
 	tite_forceinline;
+	
 	// Map out replacement, if given format is not suitable.
 	// Assumes rgba8unorm is always accepted.
 	static __map = tite_mapping([

@@ -13,29 +13,35 @@ function tite_draw_matrix(_mat, _x=0, _y=0, _params={})
 	static __uniFactor = shader_get_uniform(__shader, "uniFactor");
 		
 	// Get parameters for drawing.
-	var _w = _params[$ "width"] ?? self.size[0];
-	var _h = _params[$ "height"] ?? self.size[1];
-		_w *= _params[$ "xscale"] ?? 1.0;
-		_h *= _params[$ "yscale"] ?? 1.0;
-	var _halign = _params[$ "halign"] ?? 0.0;
-	var _valign = _params[$ "valign"] ?? 0.0;
-		_x -= _w * _halign;
-		_y -= _h * _valign;
+	var _w			= _params[$ "width"]		?? self.size[0];
+	var _h			= _params[$ "height"]		?? self.size[1];
+	var _halign		= _params[$ "halign"]		?? 0.0;
+	var _valign		= _params[$ "valign"]		?? 0.0;
+	var _background	= _params[$ "background"]	?? false;
+	var _outline	= _params[$ "outline"]		?? false;
+	var _normalize	= _params[$ "normalize"]	?? false;
+	var _rangeMin	= _params[$ "rangeMin"]		?? 0.0;
+	var _rangeMax	= _params[$ "rangeMax"]		?? 1.0;
+	
+	// Calculate positions, size and offsets
+	_w *= _params[$ "xscale"] ?? 1.0;
+	_h *= _params[$ "yscale"] ?? 1.0;
+	_x -= _w * _halign;
+	_y -= _h * _valign;
 			
-	// Whether draw background.
-	if (struct_exists(_params, "background"))
+	// Draw background for surface.
+	if (_background)
 	{
 		var _c = c_black;
 		draw_rectangle_color(_x, _y, _x+_w, _y+_h, _c,_c,_c,_c, false);
 	}
 		
-	// Whether remap values into. Useful for visualizing float textures.
-	if (struct_exists(_params, "normalize"))
+	// Whether remap values into. 
+	// Useful for visualizing float textures.
+	if (_normalize)
 	{
-		var _min = _params[$ "rangeMin"] ?? 0;
-		var _max = _params[$ "rangeMax"] ?? 1;
 		shader_set(__shader);
-		shader_set_uniform_f(__uniFactor, _min, _max);
+		shader_set_uniform_f(__uniFactor, _rangeMin, _rangeMax);
 		draw_surface_stretched(_mat.Surface(), _x, _y, _w, _h);
 		shader_reset();
 	} 
@@ -44,8 +50,8 @@ function tite_draw_matrix(_mat, _x=0, _y=0, _params={})
 		draw_surface_stretched(_mat.Surface(), _x, _y, _w, _h);
 	}
 		
-	// Whether draw outline.
-	if (struct_exists(_params, "outline"))
+	// Draw outline around the surface.
+	if (_outline)
 	{
 		var _c = c_white;
 		draw_rectangle_color(_x, _y, _x+_w, _y+_h, _c,_c,_c,_c, true);

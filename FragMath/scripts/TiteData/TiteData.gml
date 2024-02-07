@@ -12,13 +12,13 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	static __counter = 0;
-	self.name = $"TiteGpuMatrix_{__counter++}"
+	self.name = $"TiteData_{__counter++}"
 	self.size = [1, 1];
 	self.texel = [1.0, 1.0];
 	self.count = 1;
+	self.format = surface_rgba32float;
 	self.repetive = true;
 	self.interpolate = false;
-	self.format = surface_rgba32float;
 	self.surface = -1;
 	
 	// Initialization.
@@ -26,7 +26,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	|| (_height != undefined)
 	|| (_params != undefined) 
 	{
-		self.Initialize(_width, _height, _params);
+		return tite_data_init(self, _width, _height, _params);
 	}
 	
 	
@@ -38,69 +38,23 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Initialize(_width, _height, _params);
-	/// @desc	Set size, format and name of matrix.
+	/// @desc	(Re)Initialize data with given parameters..
 	/// @param	{Real}		_width
 	/// @param	{Real}		_height
 	/// @param	{Struct}	_params		[Optional] format and name.
 	/// @return	{Struct.TiteData}
 	static Initialize = function(_width=1, _height=1, _params={})
 	{
-		// Optional parameters.
-		self.name = _params[$ "name"] ?? self.name;
-		self.format	= _params[$ "format"] ?? self.format;
-		self.repetive = _params[$ "repetive"] ?? self.repetive;
-		self.interpolate = _params[$ "interpolate"] ?? self.interpolate;
-		
-		// Make sure format is supported.
-		self.format	= tite_format_find(self.format);
-		
-		// Set up the size.
-		self.size[0] = clamp(ceil(_width), 1, 16384);
-		self.size[1] = clamp(ceil(_height), 1, 16384);
-		
-		// Set up texel size.
-		self.texel[0] = 1.0 / self.size[0];
-		self.texel[1] = 1.0 / self.size[1];
-		self.count = self.size[0] * self.size[1];
-		
-		// Give warning if size was not valid.
-		if (self.size[0] != _width) || (self.size[1] != _height)
-		{
-			tite_warning(
-				+ $"Matrix {self.name} Initialize: \n"
-				+ $" - Non-valid size: [{_width}, {_height}] \n"
-				+ $" - Changed into:   {self.size} "
-			);
-		}
-		
-		return self;
+		return tite_data_init(self, _width, _height, _params);
 	};
 	
 
 	/// @func	Surface();
-	/// @desc	Return surface which is the data of this matrix.
+	/// @desc	Return surface, creates if necessary.
 	/// @return {Id.Surface}
 	static Surface = function()
 	{
-		// Make sure surface is correct shape.
-		if (surface_exists(self.surface))
-		{
-			if (surface_get_width(self.surface) != self.size[0])
-			|| (surface_get_height(self.surface) != self.size[1])
-			|| (surface_get_format(self.surface) != self.format)
-			{
-				// Force recreation.
-				surface_free(self.surface);
-			}
-		}
-		
-		// Make sure surface exists.
-		if (!surface_exists(self.surface))
-		{
-			self.surface = surface_create(self.size[0], self.size[1], self.format);
-		}
-		
-		return self.surface;
+		return tite_data_surface(self);
 	};
 	
 	
@@ -197,9 +151,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	/// @return {Struct.TiteData}
 	static Free = function() 
 	{
-		if (surface_exists(self.surface))
-			surface_free(self.surface);
-		return self;
+		return tite_data_free(self);
 	};
 	
 	

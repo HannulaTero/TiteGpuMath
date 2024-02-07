@@ -11,6 +11,13 @@ if (keyboard_check(vk_enter)) || (keyboard_check_pressed(vk_space))
 	matSpd.Scale(, 0.995);	// Friction.
 	matSpd.Offset(, [0.0, 0.5]); // Gravity.
 	matPos.Clamp(, 0, room_width);
+	
+	tite_execute(self.context, @"
+		pos += spd;
+		spd *= 0.995;
+		spd += [0.0, 0.5];
+		pos = clamp(pos, 0, room_width);
+	");
 }
 
 // Add small randomness to position.

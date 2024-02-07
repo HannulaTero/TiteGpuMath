@@ -9,9 +9,7 @@ function tite_dot(_out, _lhs, _rhs, _axis=[1, 0])
 {
 	// Trying to do in-place operation.
 	if (_out == _lhs) || (_out == _rhs)
-	{
 		return tite_inplace(tite_dot, [_out, _lhs, _rhs, _axis]);
-	}
 		
 	// Check target axis compatibility.
 	if (_lhs.size[_axis[0]] != _rhs.size[_axis[1]])
@@ -34,12 +32,28 @@ function tite_dot(_out, _lhs, _rhs, _axis=[1, 0])
 		);
 	}
 		
-	// Select axis which stay, and which are stepped upon.
-	var _startA = [real(_axis[0] == 1), real(_axis[0] == 0)];
-	var _startB = [real(_axis[1] == 1), real(_axis[1] == 0)];
-	var _stepsA = [_startA[0] ? 0.0 : _lhs.texel[0], _startA[1] ? 0.0 : _lhs.texel[1]];
-	var _stepsB = [_startB[0] ? 0.0 : _rhs.texel[0], _startB[1] ? 0.0 : _rhs.texel[1]];
-	var _iterations = _lhs.size[_axis[0]];
+	// Select axis, which keep their position.
+	var _startA = [
+		(_axis[0] == 1), 
+		(_axis[0] == 0)
+	];
+	
+	var _startB = [
+		(_axis[1] == 1), 
+		(_axis[1] == 0)
+	];
+	
+	// Those which did keep their position are don't change.
+	// Those which didn't keep their position are stepped upon.
+	var _stepsA = [
+		(_startA[0] ? 0.0 : _lhs.texel[0]), 
+		(_startA[1] ? 0.0 : _lhs.texel[1])
+	];
+	
+	var _stepsB = [
+		(_startB[0] ? 0.0 : _rhs.texel[0]), 
+		(_startB[1] ? 0.0 : _rhs.texel[1])
+	];
 	
 	// Do the computation.
 	tite_begin();
@@ -52,7 +66,7 @@ function tite_dot(_out, _lhs, _rhs, _axis=[1, 0])
 	tite_floatN("uniStartB", _startB);
 	tite_floatN("uniStepsA", _stepsA);
 	tite_floatN("uniStepsB", _stepsB);
-	tite_float1("uniIterations", _iterations);
+	tite_float1("uniIterations", _lhs.size[_axis[0]]);
 	tite_target(_out);
 	tite_render();
 	tite_finish();

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "tite_data_lut",
+  "name": "tite_uniform",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Tite Data Lookup",
-    "path": "folders/TiteGpu/Data/Tite Data Lookup.yy",
+    "name": "Scripts",
+    "path": "folders/TiteGpu/Scripts.yy",
   },
 }

@@ -8,18 +8,13 @@ function tite_lut(_out, _src, _lut)
 {
 	// Trying to do in-place operation.
 	if (_out == _src)
-	{
 		return tite_inplace(tite_lut, [_out, _src, _lut]);
-	}
-
-	// Check dimensionality match.
-	tite_assert_piecewise(_out, _src);
 	
 	// Preparations. Precompute range remapping factors.
 	var _factorX = _lut.rangeMin;
 	var _factorY = 1.0 / (_lut.rangeMax - _lut.rangeMin);
 	
-	// Whether do for each component separately.
+	// Whether do operation for each component separately.
 	var _components = tite_format_components(_src.format);
 	var _shader = (_components == 4)
 		? tite_op_lut4

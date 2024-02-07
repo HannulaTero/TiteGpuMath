@@ -6,13 +6,15 @@ function tite_begin()
 {
 	tite_forceinline;
 	
+	// Set up gpu states.
 	gpu_push_state();
 	gpu_set_alphatestenable(false);
 	gpu_set_tex_filter(false);
 	gpu_set_tex_repeat(false);
-	array_push(global.tite.previousShader, shader_current());
+	array_push(TITE.previousShader, shader_current());
 	
-	if (global.tite.cumulative) 
+	// Set cumulative results with blend mode.
+	if (TITE.cumulative) 
 	{
 		gpu_set_blendenable(true);
 		gpu_set_blendmode_ext(bm_one, bm_one);
@@ -26,21 +28,17 @@ function tite_begin()
 
 
 /// @func	tite_end();
-/// @desc	Returns previous gpu state.
+/// @desc	Returns previous gpu state. Removes cumulativity.
 function tite_end()
 {
 	tite_forceinline;
 	gpu_pop_state();
-	var _shader = array_pop(global.tite.previousShader);
+	var _shader = array_pop(TITE.previousShader);
 	if (_shader != -1)
-	{
 		shader_set(_shader);
-	}
 	else
-	{
 		shader_reset();
-	}
-	global.tite.cumulative = false;
+	TITE.cumulative = false;
 }
 
 
@@ -54,19 +52,19 @@ function tite_shader(_shader)
 }
 
 
-/// @func	tite_set_cumulative(_bool);
+/// @func	tite_set_cumulative(_additive);
 /// @desc	Whether results are "set" or "add" to destination. 
 /// @param	{Bool} _additive
 function tite_set_cumulative(_additive=true) 
 {
 	tite_forceinline;
-	global.tite.cumulative = _additive;
+	TITE.cumulative = _additive;
 }
 
 
 /// @func	tite_sample(_name, _src);
 /// @desc	Set matrix as texture sampler, input for operation.
-/// @param	{String}				_name
+/// @param	{String}			_name
 /// @param	{Struct.TiteData}	_src
 function tite_sample(_name, _src)
 {
@@ -83,7 +81,7 @@ function tite_sample(_name, _src)
 function tite_render()
 {
 	tite_forceinline;
-	vertex_submit(global.tite.vertexBuffer, pr_trianglestrip, -1);
+	vertex_submit(TITE.vertexBuffer, pr_trianglestrip, -1);
 }
 
 
@@ -93,7 +91,7 @@ function tite_render()
 function tite_target(_src)
 {
 	tite_forceinline;
-	surface_set_target(_src.Surface());
+	surface_set_target(tite_data_surface(_src));
 }
 
 

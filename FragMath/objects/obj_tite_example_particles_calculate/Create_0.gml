@@ -1,12 +1,28 @@
 /// @desc
 show_debug_overlay(true, true);
-
+tite_message($"swizzle compiled : {shader_is_compiled(tite_op_swizzle)}");
 // Allow resizing for more.
 dimension = 256;
 		
 // The matrix data, used for simple particles.
 matPos = new TiteData(dimension, dimension, { name: "Position" });
 matSpd = new TiteData(dimension, dimension, { name: "Speed" });
+lutSin = new TiteDataLut({
+	width: 256,
+	rangeMin: -pi,
+	rangeMax: +pi,
+	func: function(_lhs) { return sin(_lhs); }
+});
+
+self.context = {
+	pos : undefined,
+	spd : undefined,
+	dimension: dimension
+};
+tite_execute(self.context, @"
+	pos = data<f32>(dimension, dimension);
+	spd = data<f32>(dimension, dimension);
+");
 
 
 // Helper methods.

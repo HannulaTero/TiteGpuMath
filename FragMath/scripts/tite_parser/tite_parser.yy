@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "tite_floatN",
+  "name": "tite_parser",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/TiteGpu/Scripts.yy",
+    "name": "Virtual Machine",
+    "path": "folders/TiteGpu/Virtual Machine.yy",
   },
 }

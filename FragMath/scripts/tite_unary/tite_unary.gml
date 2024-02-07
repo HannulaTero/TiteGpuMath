@@ -10,12 +10,7 @@ function tite_unary(_out, _src, _op)
 {
 	// Trying to do in-place operation.
 	if (_out == _src)
-	{
 		return tite_inplace(tite_unary, [_out, _src, _op]);
-	}
-
-	// Check dimensionality match.
-	tite_assert_piecewise(_out, _src);
 		
 	// Do the computation.
 	tite_begin();

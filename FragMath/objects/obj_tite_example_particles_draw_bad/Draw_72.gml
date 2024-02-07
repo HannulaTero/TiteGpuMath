@@ -16,6 +16,7 @@ if (keyboard_check(vk_left))
 		var _buff = matPos.ToBuffer();
 		buffer_seek(_buff, buffer_seek_start, 0);
 		other.vertexBuffer = vertex_create_buffer_from_buffer(_buff, other.vertexFormat);
+		vertex_freeze(other.vertexBuffer);
 		buffer_delete(_buff);
 	}
 }

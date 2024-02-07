@@ -72,21 +72,34 @@ function tite_float4(_name, _x, _y, _z, _w)
 
 /// @func	tite_float4_any(_name, _values);
 /// @desc	Forces 4 items into uniform from given value.
-/// @param	{String}		_name
-/// @param	{Any}			_values Number or Array
+/// @param	{String}	_name
+/// @param	{Any}		_values		Single value or Array of values.
 function tite_float4_any(_name, _values)
 {
 	tite_forceinline;
+	static __array = [0.0, 0.0, 0.0, 0.0];
 	if (is_array(_values)) 
 	{
-		var _array = [0.0, 0.0, 0.0, 0.0];
-		array_copy(_array, 0, _values, 0, max(4, array_length(_values)));
-		tite_floatN(_name, _array);
-		array_resize(_array, 0);
+		var _count = max(4, array_length(_values));
+		array_copy(__array, 0, _values, 0, _count);
+		tite_floatN(_name, __array);
 	} 
 	else 
 	{
 		_values ??= 0.0;
 		tite_float4(_name, _values, _values, _values, _values);
 	}
+}
+
+
+/// @func	tite_integer(_name, _x);
+/// @desc	Set shader uniform with given name.
+/// @param	{String}	_name
+/// @param	{Real}		_x
+function tite_integer(_name, _x)
+{
+	tite_forceinline;
+	var _shader = shader_current();
+	var _uniform = shader_get_uniform(_shader, _name);
+	shader_set_uniform_i(_uniform, _x);
 }

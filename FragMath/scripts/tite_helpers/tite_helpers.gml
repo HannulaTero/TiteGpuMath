@@ -1,11 +1,10 @@
-
-/// @func	tite_error(_msg);
-/// @desc	Throws error message.
+/// @func	tite_message(_msg);
+/// @desc	Prompts a message.
 /// @param	{String} _msg
-function tite_error(_msg)
+function tite_message(_msg)
 {
 	tite_forceinline;
-	throw($"[TiteGpu][Error] {_msg}");
+	show_debug_message($"[Tite] {_msg}");
 }
 
 
@@ -15,7 +14,17 @@ function tite_error(_msg)
 function tite_warning(_msg)
 {
 	tite_forceinline;
-	show_debug_message($"[TiteGpu][Warning] {_msg}");
+	show_debug_message($"[Tite][Warning] {_msg}");
+}
+
+
+/// @func	tite_error(_msg);
+/// @desc	Throws error message.
+/// @param	{String} _msg
+function tite_error(_msg)
+{
+	tite_forceinline;
+	throw($"[Tite][Error] {_msg}");
 }
 
 
@@ -44,13 +53,21 @@ function tite_inplace(_func, _args)
 	// Render source and destination can't be same.
 	// Therefore temporary target is created, and then results are copied over.
 	tite_forceinline;
+	static __helper = new TiteData();
+	
+	// Change output to temporal target.
 	var _out = _args[0];
-	_args[0] = _out.Clone();
+	_args[0] = tite_data_copy(__helper, _out, false);
 	script_execute_ext(_func, _args);
-	// feather ignore GM2023
+	
+	// Copy temporal target data to actual target.
+	var _srcSurf = tite_data_surface(_args[0]);
+	var _dstSurf = tite_data_surface(_out);
 	tite_begin();
-	surface_copy(_out.Surface(), 0, 0, _args[0].Surface());
+	surface_copy(_dstSurf, 0, 0, _srcSurf);
 	tite_end();
+	
+	// Change output back in array.
 	_args[0].Free();
 	_args[0] = _out;
 	return _out;

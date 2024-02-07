@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Constructors",
-    "path": "folders/TiteGpu/Constructors.yy",
+    "name": "Tite Data Lookup",
+    "path": "folders/TiteGpu/Data/Tite Data Lookup.yy",
   },
 }

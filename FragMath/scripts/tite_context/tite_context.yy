@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "tite_data_lut",
+  "name": "tite_context",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Tite Data Lookup",
-    "path": "folders/TiteGpu/Data/Tite Data Lookup.yy",
+    "name": "Virtual Machine",
+    "path": "folders/TiteGpu/Virtual Machine.yy",
   },
 }

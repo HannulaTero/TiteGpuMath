@@ -10,13 +10,7 @@ function tite_binary(_out, _lhs, _rhs, _op)
 {
 	// Trying to do in-place operation.
 	if (_out == _lhs) || (_out == _rhs)
-	{
 		return tite_inplace(tite_binary, [_out, _lhs, _rhs, _op]);
-	}
-
-	// Check dimensionality match.
-	tite_assert_piecewise(_out, _lhs);
-	tite_assert_piecewise(_out, _rhs);
 		
 	// Do the computation.
 	tite_begin();
