@@ -98,7 +98,7 @@ function tite_assert_piecewise(_lhs, _rhs)
 	if (!tite_match_piecewise(_lhs, _rhs))
 	{
 		tite_error(
-			+ $"Piecewise operation require matching matrix size, or scalars. \n"
+			+ $"Piecewise operation require matching datablock sizes, or scalars. \n"
 			+ $" - Got:\n - {_lhs.name} : {_lhs.size}\n - {_rhs.name} : {_rhs.size} \n"
 		);
 	}

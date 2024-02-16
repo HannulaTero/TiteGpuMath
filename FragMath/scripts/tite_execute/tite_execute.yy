@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Virtual Machine",
-    "path": "folders/TiteGpu/Virtual Machine.yy",
+    "path": "folders/TiteGpu/X_Experimental/Virtual Machine.yy",
   },
 }

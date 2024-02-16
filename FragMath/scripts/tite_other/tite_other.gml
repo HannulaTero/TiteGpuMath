@@ -214,9 +214,9 @@ function tite_swizzle(_out, _r=0, _g=1, _b=2, _a=3)
 /// @param	{Any} _seedX
 /// @param	{Any} _seedY
 function tite_randomize(_out, _min=undefined, _max=undefined, _seedX=undefined, _seedY=undefined)
-{
-	_seedX ??= (current_time mod 2777) / 2777.0;
-	_seedY ??= (current_time mod 1097) / 1097.0;
+{ 
+	_seedX ??= (get_timer() mod 2777) / 2777.0;
+	_seedY ??= (get_timer() mod 1097) / 1097.0;
 	tite_begin();
 	tite_shader(tite_op_randomize);
 	tite_floatN("uniTexelA", _out.texel);

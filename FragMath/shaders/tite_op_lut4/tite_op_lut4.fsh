@@ -1,6 +1,6 @@
 precision highp float;
 uniform sampler2D texA;
-uniform sampler2D texB;
+uniform sampler2D texLUT;
 uniform vec2 uniTexelA;
 uniform vec2 uniTexelLUT;
 uniform vec2 uniFactor;
@@ -15,7 +15,7 @@ void main()
 	for(int i = 0; i < 4; i++)
 	{
 		_lhs[i] = (_lhs[i] - uniFactor[0]) * uniFactor[1];
-		_out[i] = texture2D(texB, vec2(_lhs[i], 0.5) * uniTexelLUT)[0];
+		_out[i] = texture2D(texLUT, vec2(_lhs[i], 0.5) * uniTexelLUT)[0];
 	}
 	
 	// Store the result.

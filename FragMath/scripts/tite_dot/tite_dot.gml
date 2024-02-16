@@ -32,19 +32,19 @@ function tite_dot(_out, _lhs, _rhs, _axis=[1, 0])
 		);
 	}
 		
-	// Select axis, which keep their position.
+	// Find non-iterable axis, those which weren't selected.
+	// These will keep their position. 
 	var _startA = [
-		(_axis[0] == 1), 
-		(_axis[0] == 0)
+		(_axis[0] != 0), 
+		(_axis[0] != 1)
 	];
 	
 	var _startB = [
-		(_axis[1] == 1), 
-		(_axis[1] == 0)
+		(_axis[1] != 0), 
+		(_axis[1] != 1)
 	];
 	
-	// Those which did keep their position are don't change.
-	// Those which didn't keep their position are stepped upon.
+	// Find iterable axis, and get their stepping size.
 	var _stepsA = [
 		(_startA[0] ? 0.0 : _lhs.texel[0]), 
 		(_startA[1] ? 0.0 : _lhs.texel[1])

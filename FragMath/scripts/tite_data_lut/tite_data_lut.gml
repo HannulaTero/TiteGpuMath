@@ -31,8 +31,9 @@ function tite_data_lut_init(_dst, _params={})
 	tite_data_init(_dst, _width, 1, _params);
 	
 	// Initialize buffer in CPU side.
+	var _count = _dst.count; 
 	var _dsize = tite_format_bytes(_dst.format);
-	var _bytes = _dsize * _dst.count;
+	var _bytes = _dsize * _count;
 	_dst.buffer = buffer_create(_bytes, buffer_fixed, 1);
 	
 	// Fill the buffer data.
@@ -45,21 +46,23 @@ function tite_data_lut_init(_dst, _params={})
 	else
 	{
 		// Preparations.
+		_buffer = _dst.buffer;
+		var _func = _dst.func;
 		var _min = _dst.rangeMin;
 		var _max = _dst.rangeMax;
-		var _div = 1.0 / (_dst.count - 1);
+		var _div = 1.0 / (_count - 1);
 		var _dtype = tite_format_buffer_dtype(_dst.format);
 		var _components = tite_format_components(_dst.format);
-		buffer_seek(_dst.buffer, buffer_seek_start, 0);
+		buffer_seek(_buffer, buffer_seek_start, 0);
 		
 		// Generate buffer data.
-		for(var i = 0.0; i < _dst.count; i++)
+		for(var i = 0.0; i < _count; i++)
 		{
 			var _lhs = lerp(_min, _max, i * _div);
-			var _out = _dst.func(_lhs);
+			var _out = _func(_lhs);
 			repeat(_components) 
 			{
-				buffer_write(_dst.buffer, _dtype, _out);
+				buffer_write(_buffer, _dtype, _out);
 			}
 		}
 	}
@@ -83,15 +86,15 @@ function tite_data_lut_surface(_src)
 }
 
 
-/// @func	tite_data_lut_free(_data);
+/// @func	tite_data_lut_free(_src);
 /// @desc	Removes surface and buffer for lookup data.
-/// @param	{Struct.TiteDataLut} _data
-function tite_data_lut_free(_data)
+/// @param	{Struct.TiteDataLut} _src
+function tite_data_lut_free(_src)
 {
-	tite_data_free(_data);
-	if (buffer_exists(_data.buffer))
-		buffer_delete(_data.buffer);
-	return _data;
+	tite_data_free(_src);
+	if (buffer_exists(_src.buffer))
+		buffer_delete(_src.buffer);
+	return _src;
 }
 
 

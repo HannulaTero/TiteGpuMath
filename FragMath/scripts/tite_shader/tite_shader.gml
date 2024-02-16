@@ -63,7 +63,7 @@ function tite_set_cumulative(_additive=true)
 
 
 /// @func	tite_sample(_name, _src);
-/// @desc	Set matrix as texture sampler, input for operation.
+/// @desc	Set datablock as texture sampler, input for operation.
 /// @param	{String}			_name
 /// @param	{Struct.TiteData}	_src
 function tite_sample(_name, _src)
@@ -86,7 +86,7 @@ function tite_render()
 
 
 /// @func	tite_target(_src);
-/// @desc	Set matrix as destination for calculations
+/// @desc	Set datablock as destination for calculations
 /// @param	{Struct.TiteData}	_src
 function tite_target(_src)
 {

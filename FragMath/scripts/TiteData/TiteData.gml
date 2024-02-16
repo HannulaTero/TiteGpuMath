@@ -68,11 +68,11 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Bytes();
-	/// @desc	Returns how many bytes the matrix requires to be put into buffer.
+	/// @desc	Returns how many bytes the gpu datablock requires to be put into buffer.
 	/// @return {Real}
 	static Bytes = function()
 	{
-		return tite_format_bytes(self.format);
+		return self.count * tite_format_bytes(self.format);
 	};
 	
 	
@@ -86,13 +86,13 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 	
 	/// @func	ToBuffer(_buffer, _offset);
-	/// @desc	Put contents of matrix into given buffer.
+	/// @desc	Put contents of gpu datablock into given buffer.
 	/// @param	{Id.Buffer}	_buffer		If not given, one is created for you. 
 	/// @param	{Real}		_offset 
 	/// @return {Id.Buffer}
 	static ToBuffer = function(_buffer=undefined, _offset=0)
 	{
-		_buffer ??= buffer_create(self.count * self.Bytes(), buffer_fixed, 1);
+		_buffer ??= buffer_create(self.Bytes(), buffer_fixed, 1);
 		buffer_get_surface(_buffer, self.Surface(), _offset);
 		buffer_seek(_buffer, buffer_seek_start, 0);
 		return _buffer;
@@ -100,7 +100,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	
 	
 	/// @func	FromBuffer(_buffer, _offset);
-	/// @desc	Put contents of given buffer into matrix.
+	/// @desc	Put contents of given buffer into gpu datablock.
 	/// @param	{Id.Buffer}	_buffer
 	/// @param	{Real}		_offset 
 	/// @return {Struct.TiteData}
@@ -113,7 +113,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	
 	
 	/// @func	Copy(_src, _copyContent);
-	/// @desc	Copies structure from other matrix, optionally also copy the contents.
+	/// @desc	Copies structure from other data, optionally also copy the contents.
 	/// @param	{Struct.TiteData}	_src
 	/// @param	{Bool}				_copyContent
 	/// @return {Struct.TiteData}
@@ -124,7 +124,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	
 	
 	/// @func	Clone(_copyContent);
-	/// @desc	Creates clone of matrix, optionally also copy the contents.
+	/// @desc	Creates clone of data, optionally also copy the contents.
 	/// @param	{Bool}					_copyContent
 	/// @return {Struct.TiteData}
 	static Clone = function(_copyContent=false) 
@@ -142,12 +142,12 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	static Draw = function(_x=0, _y=0, _params={}) 
 	{
 		// feather ignore GM1045
-		return tite_draw_matrix(self, _x, _y, _params);
+		return tite_draw(self, _x, _y, _params);
 	};
 	
 
 	/// @func	Free();
-	/// @desc	Frees the surface in this matrix, after matrix can be let go.
+	/// @desc	Frees the surface in data from gpu.
 	/// @return {Struct.TiteData}
 	static Free = function() 
 	{
@@ -501,8 +501,9 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	/// @desc	Uses Look up table to select new value. 
 	/// @param	{Struct.TiteData}	_src
 	/// @param	{Struct.TiteGpuLookup}	_lut
-	static Lut = function(_src, _lut)
+	static Lut = function(_src=undefined, _lut=undefined)
 	{
+		_src ??= self;
 		return tite_lut(self, _src, _lut);
 	};
 
@@ -535,7 +536,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Offset(_src, _offset);
-	/// @desc	Adds offset to given matrix.
+	/// @desc	Adds offset to given data values.
 	/// @param	{Struct.TiteData}	_src
 	/// @param	{Any}					_offset
 	/// @return {Struct.TiteData}
@@ -547,7 +548,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Scale(_src, _factor);
-	/// @desc	Scales values of given matrix.
+	/// @desc	Scales values of given datablock.
 	/// @param	{Struct.TiteData}	_src
 	/// @param	{Any}					_factor
 	/// @return {Struct.TiteData}
@@ -559,7 +560,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 	
 
 	/// @func	Normalize(_src, _min, _max);
-	/// @desc	Normalizes matrix to given range, but does not clamp if it exceeds.
+	/// @desc	Normalizes values of data to given range, but does not clamp if it exceeds.
 	/// @param	{Struct.TiteData}	_src
 	/// @param	{Any}					_min
 	/// @param	{Any}					_max
@@ -572,7 +573,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Set(_values);
-	/// @desc	Set all matrix values to given value
+	/// @desc	Set all data values to given value
 	/// @param	{Any}	_values	
 	/// @return {Struct.TiteData}
 	static Set = function(_values=undefined) 
@@ -582,7 +583,7 @@ function TiteData(_width=undefined, _height=undefined, _params=undefined) constr
 
 
 	/// @func	Randomize(_min, _max, _seed);
-	/// @desc	Randomizes matrix content.
+	/// @desc	Randomizes content of datablock.
 	/// @param	{Any}	_min
 	/// @param	{Any}	_max
 	/// @param	{Any}	_seed

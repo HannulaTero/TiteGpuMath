@@ -47,7 +47,7 @@ function tite_data_init(_dst, _width=1, _height=1, _params={})
 	if (_dst.size[0] != _width) || (_dst.size[1] != _height)
 	{
 		tite_warning(
-			+ $"Matrix {_dst.name} Initialization: \n"
+			+ $"TiteData {_dst.name} Initialization: \n"
 			+ $" - Non-valid size: [{_width}, {_height}] \n"
 			+ $" - Changed into:   {_dst.size} "
 		);
